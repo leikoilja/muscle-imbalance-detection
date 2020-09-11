@@ -18,3 +18,7 @@ to launch `expo-cli` and follow it's instructions to launch emulator/simulator.
 ## How to contribute
 - Write the code
 - Open a pull request [here](https://github.com/leikoilja/muscle-imbalance-detection/pulls) using "MID app contribution" template.
+
+### References
+- [React-Native + Redux + Typescript Guide](https://medium.com/@killerchip0/react-native-redux-typescript-guide-f251db03428f)
+- [React-Native + Redux + Firebase](https://itnext.io/simple-firebase-redux-integration-in-react-native-32f848deff3a)
