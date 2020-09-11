@@ -16,4 +16,4 @@ to launch `expo-cli` and follow it's instructions to launch emulator/simulator.
 
 # How to contribute
 - Write the code
-- Open a pull request [here](https://github.com/leikoilja/muscle-imbalance-detection/pulls) using "MID app contribution" template
+- Open a pull request [here](https://github.com/leikoilja/muscle-imbalance-detection/pulls) using "MID app contribution" template.
