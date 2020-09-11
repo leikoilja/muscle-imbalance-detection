@@ -1,3 +1,3 @@
 # Muscle Imbalance Detection
 
-** to be filled **
+This is our project together
