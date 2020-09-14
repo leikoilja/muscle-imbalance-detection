@@ -1,33 +1,55 @@
 export type User = {
-  name: string;
-  surname: string;
-  age: number;
+  uid: number;
+  email: string;
+  fullName: string;
 };
 
-export type UserListState = User[];
+export type AuthState = {
+  loggedIn: boolean;
+  isFetching: boolean;
+  hasError: boolean;
+  errorMessage: string;
+  user: User;
+};
 
-export type AddUserAction = {
+export type LoginUserAction = {
+  email: string;
+  password: string;
+};
+
+export type LoginStartAction = {
   type: string;
-  userData: User;
 };
 
-export type UpdateUserAction = {
+export type LoginFinishedAction = {
   type: string;
-  index: number;
-  userData: User;
+  user: User;
 };
 
-export type RemoveUserAction = {
+export type LoginErrorAction = {
   type: string;
-  index: number;
+  error: string;
 };
 
-export type UserListAction =
-  | AddUserAction
-  | UpdateUserAction
-  | RemoveUserAction;
-
-export type AppState = {
-  userList: UserListState;
-  // add future state slices here
+export type LogoutStartAction = {
+  type: string;
 };
+
+export type LogoutFinishedAction = {
+  type: string;
+};
+
+export type LogoutErrorAction = {
+  type: string;
+  error: string;
+};
+
+export type LogoutUserAction = {};
+
+export type UserAuthAction =
+  | LoginFinishedAction
+  | LoginStartAction
+  | LoginErrorAction
+  | LogoutStartAction
+  | LogoutErrorAction
+  | LogoutFinishedAction;
