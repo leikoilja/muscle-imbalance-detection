@@ -81,11 +81,31 @@ export const loginUser = (
   password: string
 ): LoginUserAction => async (dispatch) => {
   dispatch(loginStart());
+  let user_data = {};
   await firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then((response) => {
-      dispatch(loginFinished(response.user));
+      let user = response.user;
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            console.log("No documents");
+          } else {
+            user_data = doc.data();
+          }
+        })
+        .catch((error) => {
+          dispatch(loginError(error));
+        })
+        .finally(() => {
+          user = { ...user_data, user };
+          dispatch(loginFinished(user));
+        });
     })
     .catch((error) => {
       dispatch(loginError(error));
@@ -114,10 +134,14 @@ export const registerUser = (
     .auth()
     .createUserWithEmailAndPassword(email, password)
     .then((response) => {
-      response.user.updateProfile({
+      const user = response.user;
+      const account = {
         fullName: fullName,
-      });
-      dispatch(registrationFinished(response.user));
+        isDoctor: false,
+        isSuperuser: false,
+      };
+      firebase.firestore().collection("users").doc(user.uid).set(account);
+      dispatch(registrationFinished(user));
     })
     .catch((error) => {
       dispatch(registrationError(error));

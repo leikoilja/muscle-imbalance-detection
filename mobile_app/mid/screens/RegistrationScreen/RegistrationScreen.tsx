@@ -26,7 +26,8 @@ class RegistrationScreen extends Component {
     const { registerUser, navigation } = this.props;
     const response = await registerUser(
       this.state.emailValue,
-      this.state.passwordValue
+      this.state.passwordValue,
+      this.state.fullNameValue
     );
   };
 
