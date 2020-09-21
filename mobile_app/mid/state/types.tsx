@@ -12,6 +12,7 @@ export type AuthState = {
   user: User;
 };
 
+// Login
 export type LoginUserAction = {
   email: string;
   password: string;
@@ -31,6 +32,9 @@ export type LoginErrorAction = {
   error: string;
 };
 
+// Logout
+export type LogoutUserAction = {};
+
 export type LogoutStartAction = {
   type: string;
 };
@@ -44,7 +48,30 @@ export type LogoutErrorAction = {
   error: string;
 };
 
-export type LogoutUserAction = {};
+// Registration
+export type RegisterUserAction = {
+  email: string;
+  password: string;
+};
+
+export type RegistrationAction = {
+  email: string;
+  password: string;
+};
+
+export type RegistrationStartAction = {
+  type: string;
+};
+
+export type RegistrationFinishedAction = {
+  type: string;
+  user: User;
+};
+
+export type RegistrationErrorAction = {
+  type: string;
+  error: string;
+};
 
 export type UserAuthAction =
   | LoginFinishedAction

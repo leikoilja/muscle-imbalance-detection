@@ -25,6 +25,7 @@ export const userAuth = (
         ...state,
         isFetching: false,
         loggedIn: true,
+        hasError: false,
         errorMessage: "",
         user,
       };
@@ -57,6 +58,32 @@ export const userAuth = (
         loggedIn: true,
         hasError: true,
         errorMessage: error,
+      };
+    }
+    case USER_AUTH_ACTION_TYPES.REGISTRATION_START: {
+      return {
+        ...state,
+        isFetching: true,
+      };
+    }
+    case USER_AUTH_ACTION_TYPES.REGISTRATION_FINISHED: {
+      const { user } = action;
+      return {
+        ...state,
+        isFetching: false,
+        hasError: false,
+        loggedIn: true,
+        errorMessage: "",
+        user,
+      };
+    }
+    case USER_AUTH_ACTION_TYPES.REGISTRATION_ERROR: {
+      const { error } = action;
+      return {
+        ...state,
+        isFetching: false,
+        hasError: true,
+        errorMessage: error.message,
       };
     }
     default:

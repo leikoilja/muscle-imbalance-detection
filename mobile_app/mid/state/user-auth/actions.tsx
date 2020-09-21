@@ -10,6 +10,10 @@ import {
   UserAuthAction,
   LogoutStartAction,
   LogoutErrorAction,
+  RegistrationErrorAction,
+  RegistrationStartAction,
+  RegistrationFinishedAction,
+  RegisterUserAction,
 } from "../types";
 import { Dispatch } from "redux";
 
@@ -20,6 +24,9 @@ export enum USER_AUTH_ACTION_TYPES {
   LOGOUT_START = "USER_AUTH/LOGOUT_START",
   LOGOUT_FINISHED = "USER_AUTH/LOGOUT_FINISHED",
   LOGOUT_ERROR = "USER_AUTH/LOGOUT_ERROR",
+  REGISTRATION_START = "USER_AUTH/REGISTRATION_START",
+  REGISTRATION_FINISHED = "USER_AUTH/REGISTRATION_FINISHED",
+  REGISTRATION_ERROR = "USER_AUTH/REGISTRATION_ERROR",
 }
 
 // Login
@@ -51,6 +58,21 @@ const logoutError = (error: string): LogoutErrorAction => ({
   error,
 });
 
+// Registration
+const registrationStart = (): RegistrationStartAction => ({
+  type: USER_AUTH_ACTION_TYPES.REGISTRATION_START,
+});
+
+const registrationFinished = (user: User): RegistrationFinishedAction => ({
+  type: USER_AUTH_ACTION_TYPES.REGISTRATION_FINISHED,
+  user,
+});
+
+const registrationError = (error: string): RegistrationErrorAction => ({
+  type: USER_AUTH_ACTION_TYPES.REGISTRATION_ERROR,
+  error,
+});
+
 //
 // Action creators
 //
@@ -59,18 +81,15 @@ export const loginUser = (
   password: string
 ): LoginUserAction => async (dispatch) => {
   dispatch(loginStart());
-  try {
-    const response = await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password);
-    if (response.error) {
-      throw new Error(response);
-    }
-    dispatch(loginFinished(response.user));
-  } catch (error) {
-    console.log(error);
-    dispatch(loginError(error));
-  }
+  await firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then((response) => {
+      dispatch(loginFinished(response.user));
+    })
+    .catch((error) => {
+      dispatch(loginError(error));
+    });
 };
 
 export const logoutUser = (): LogoutUserAction => async (
@@ -83,4 +102,24 @@ export const logoutUser = (): LogoutUserAction => async (
   } catch (error) {
     dispatch(logoutError(error));
   }
+};
+
+export const registerUser = (
+  email: string,
+  password: string,
+  fullName: string
+): RegisterUserAction => async (dispatch) => {
+  dispatch(registrationStart());
+  await firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then((response) => {
+      response.user.updateProfile({
+        fullName: fullName,
+      });
+      dispatch(registrationFinished(response.user));
+    })
+    .catch((error) => {
+      dispatch(registrationError(error));
+    });
 };

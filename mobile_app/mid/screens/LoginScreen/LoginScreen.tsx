@@ -11,21 +11,24 @@ class LoginScreen extends Component {
     passwordValue: "password",
   };
 
-  onLogin = async () => {
+  onLoginPress = async () => {
     const { loginUser } = this.props;
     const response = await loginUser(
       this.state.emailValue,
       this.state.passwordValue
     );
-    const { errorMessage, loggedIn } = this.props.auth;
-    if (errorMessage) {
+  };
+
+  componentDidMount() {
+    const { hasError, errorMessage, loggedIn } = this.props.auth;
+    if (hasError) {
       alert(errorMessage);
     }
     if (loggedIn) {
       const { navigation } = this.props;
       navigation.navigate("Home");
     }
-  };
+  }
 
   onChange = (e, type) => {
     this.setState({ [`${type}Value`]: e });
@@ -67,7 +70,7 @@ class LoginScreen extends Component {
           onChangeText={(e) => this.onChange(e, "password")}
           placeholder="Password"
         />
-        <TouchableOpacity style={styles.button} onPress={this.onLogin}>
+        <TouchableOpacity style={styles.button} onPress={this.onLoginPress}>
           <Text style={styles.buttonTitle}>Log in</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
