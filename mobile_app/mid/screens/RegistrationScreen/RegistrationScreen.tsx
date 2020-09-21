@@ -23,8 +23,8 @@ class RegistrationScreen extends Component {
   };
 
   onRegisterPress = async () => {
-    const { registerUser, navigation } = this.props;
-    const response = await registerUser(
+    const { registerUser } = this.props;
+    await registerUser(
       this.state.emailValue,
       this.state.passwordValue,
       this.state.fullNameValue

@@ -13,10 +13,7 @@ class LoginScreen extends Component {
 
   onLoginPress = async () => {
     const { loginUser } = this.props;
-    const response = await loginUser(
-      this.state.emailValue,
-      this.state.passwordValue
-    );
+    await loginUser(this.state.emailValue, this.state.passwordValue);
   };
 
   componentDidMount() {

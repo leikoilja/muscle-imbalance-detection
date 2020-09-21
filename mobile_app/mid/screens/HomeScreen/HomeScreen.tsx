@@ -7,8 +7,8 @@ import { logoutUser } from "../../state/user-auth/actions";
 
 class HomeScreen extends React.Component {
   onLogout = async () => {
-    const { navigation, logoutUser } = this.props;
-    const response = await logoutUser();
+    const { logoutUser } = this.props;
+    await logoutUser();
   };
 
   render() {
@@ -16,7 +16,7 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Welcome, {user.email} </Text>
+        <Text>Welcome, {user.fullName} </Text>
         <TouchableOpacity style={styles.button} onPress={this.onLogout}>
           <Text style={styles.buttonTitle}>Log out</Text>
         </TouchableOpacity>
