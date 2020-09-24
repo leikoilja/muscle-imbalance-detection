@@ -46,9 +46,11 @@ class RegistrationScreen extends Component {
         >
           <Image
             style={styles.logo}
+            testID="form-logo"
             source={require("../../assets/images/logo.png")}
           />
           <TextInput
+            testID="form-fullName-input"
             style={styles.input}
             placeholder="Full Name"
             placeholderTextColor="#aaaaaa"
@@ -58,6 +60,7 @@ class RegistrationScreen extends Component {
             autoCapitalize="none"
           />
           <TextInput
+            testID="form-email-input"
             style={styles.input}
             placeholder="E-mail"
             placeholderTextColor="#aaaaaa"
@@ -67,6 +70,7 @@ class RegistrationScreen extends Component {
             autoCapitalize="none"
           />
           <TextInput
+            testID="form-password-input"
             style={styles.input}
             placeholderTextColor="#aaaaaa"
             secureTextEntry
@@ -77,6 +81,7 @@ class RegistrationScreen extends Component {
             autoCapitalize="none"
           />
           <TextInput
+            testID="form-confirmPassword-input"
             style={styles.input}
             placeholderTextColor="#aaaaaa"
             secureTextEntry
@@ -87,6 +92,7 @@ class RegistrationScreen extends Component {
             autoCapitalize="none"
           />
           <TouchableOpacity
+            testID="form-registration-button"
             style={styles.button}
             onPress={this.onRegisterPress}
           >
@@ -95,7 +101,11 @@ class RegistrationScreen extends Component {
           <View style={styles.footerView}>
             <Text style={styles.footerText}>
               Already got an account?{" "}
-              <Text onPress={this.onFooterLinkPress} style={styles.footerLink}>
+              <Text
+                testID="form-footer-button"
+                onPress={this.onFooterLinkPress}
+                style={styles.footerLink}
+              >
                 Log in
               </Text>
             </Text>

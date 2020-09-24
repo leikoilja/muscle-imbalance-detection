@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import BottomTabNavigator from "./BottomTabNavigator";
 import { RootStackParamList } from "./types";
+import NotFoundScreen from "../screens/NotFoundScreen";
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -14,10 +15,12 @@ class RootNavigator extends Component {
   authScreens = {
     Login: LoginScreen,
     Registration: RegistrationScreen,
+    NotFoundScreen: NotFoundScreen,
   };
 
   userScreens = {
     BottomTabNavigator: BottomTabNavigator,
+    NotFoundScreen: NotFoundScreen,
   };
 
   render() {
