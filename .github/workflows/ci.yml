@@ -6,6 +6,9 @@ on:
 jobs:
   install-and-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./muscle-imbalance-detection/mobile_app/mid/
     steps: 
       - uses: actions/checkout@v2
       - name: Install yarn dependencies
