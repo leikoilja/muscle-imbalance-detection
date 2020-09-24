@@ -16,8 +16,8 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Welcome, {user.fullName} </Text>
-        {user.isDoctor && <Text>You are doctor!</Text>}
+        <Text testID="welcome-text">Welcome, {user.fullName} </Text>
+        {user.isDoctor && <Text testID="doctor-info">You are doctor!</Text>}
         <TouchableOpacity style={styles.button} onPress={this.onLogout}>
           <Text style={styles.buttonTitle}>Log out</Text>
         </TouchableOpacity>

@@ -9,7 +9,9 @@ export default function NotFoundScreen({
 }: StackScreenProps<RootStackParamList, "NotFound">) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>This screen doesn't exist.</Text>
+      <Text style={styles.title} testID="text-doesnt-exist">
+        This screen doesn't exist.
+      </Text>
       <TouchableOpacity
         onPress={() => navigation.replace("Home")}
         style={styles.link}

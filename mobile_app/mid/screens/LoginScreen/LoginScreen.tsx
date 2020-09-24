@@ -1,5 +1,12 @@
 import React, { useState, Component } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Alert,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { loginUser } from "../../state/user-auth/actions";
@@ -11,6 +18,23 @@ class LoginScreen extends Component {
     passwordValue: "password",
   };
 
+  twoButtonAlert = (text: string) => {
+    const { navigation } = this.props;
+    Alert.alert(
+      "Authentication error",
+      text,
+      [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+        {
+          text: "Register",
+          onPress: () => navigation.navigate("Registration"),
+          style: "cancel",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   onLoginPress = async () => {
     const { loginUser } = this.props;
     await loginUser(this.state.emailValue, this.state.passwordValue);
@@ -19,7 +43,7 @@ class LoginScreen extends Component {
   componentDidMount() {
     const { hasError, errorMessage, loggedIn } = this.props.auth;
     if (hasError) {
-      alert(errorMessage);
+      this.twoButtonAlert(errorMessage);
     }
     if (loggedIn) {
       const { navigation } = this.props;
@@ -41,15 +65,17 @@ class LoginScreen extends Component {
     return (
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <Image
+          testID="form-logo"
           style={styles.logo}
           source={require("../../assets/images/logo.png")}
         />
-        <Text style={styles.demoCredentials}>
+        <Text testID="form-desc" style={styles.demoCredentials}>
           During development and testing you can use the following credentials
           (email/password): {"\n"}user@mid.com/password or
           doctor@mid.com/password
         </Text>
         <TextInput
+          testID="form-email-input"
           autoCapitalize="none"
           autoCorrect={false}
           value={emailValue}
@@ -59,6 +85,7 @@ class LoginScreen extends Component {
           style={styles.input}
         />
         <TextInput
+          testID="form-password-input"
           style={styles.input}
           autoCapitalize="none"
           autoCorrect={false}
@@ -67,13 +94,21 @@ class LoginScreen extends Component {
           onChangeText={(e) => this.onChange(e, "password")}
           placeholder="Password"
         />
-        <TouchableOpacity style={styles.button} onPress={this.onLoginPress}>
+        <TouchableOpacity
+          testID="form-login-button"
+          style={styles.button}
+          onPress={this.onLoginPress}
+        >
           <Text style={styles.buttonTitle}>Log in</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
-          <Text style={styles.footerText}>
+          <Text style={styles.footerText} testID="form-footer-desc">
             Don't have an account?{" "}
-            <Text onPress={this.onFooterLinkPress} style={styles.footerLink}>
+            <Text
+              testID="form-footer-button"
+              onPress={this.onFooterLinkPress}
+              style={styles.footerLink}
+            >
               Sign up
             </Text>
           </Text>
