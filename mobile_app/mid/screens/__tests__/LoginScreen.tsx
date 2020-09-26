@@ -25,6 +25,7 @@ describe("LoginScreen", () => {
       { userAuth: initialState },
       <LoginScreen {...props} />
     );
+    store.dispatch = jest.fn();
   });
 
   it("shows login form if not logged in", () => {

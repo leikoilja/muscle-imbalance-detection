@@ -13,6 +13,7 @@ describe("HomeScreen", () => {
       { userAuth: { user: { fullName: "Full Name" } } },
       <HomeScreen />
     );
+    store.dispatch = jest.fn();
   });
 
   it("shows welcome screen for user", async () => {
