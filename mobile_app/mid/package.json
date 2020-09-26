@@ -48,7 +48,7 @@
     "@testing-library/react-native": "^7.0.2",
     "@types/jest": "^26.0.14",
     "@types/react": "~16.9.23",
-    "@types/react-native": "~0.62.13",
+    "@types/react-native": "~0.63.22",
     "@types/react-redux": "^7.1.9",
     "@types/react-test-renderer": "^16.9.3",
     "babel-preset-expo": "~8.1.0",
