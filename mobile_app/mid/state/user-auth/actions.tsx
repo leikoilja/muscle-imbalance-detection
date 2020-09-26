@@ -30,45 +30,47 @@ export enum USER_AUTH_ACTION_TYPES {
 }
 
 // Login
-const loginStart = (): LoginStartAction => ({
+export const loginStart = (): LoginStartAction => ({
   type: USER_AUTH_ACTION_TYPES.LOGIN_START,
 });
 
-const loginFinished = (user: User): LoginFinishedAction => ({
+export const loginFinished = (user: User): LoginFinishedAction => ({
   type: USER_AUTH_ACTION_TYPES.LOGIN_FINISHED,
   user,
 });
 
-const loginError = (error: string): LoginErrorAction => ({
+export const loginError = (error: string): LoginErrorAction => ({
   type: USER_AUTH_ACTION_TYPES.LOGIN_ERROR,
   error,
 });
 
 // Logout
-const logoutStart = (): LogoutStartAction => ({
+export const logoutStart = (): LogoutStartAction => ({
   type: USER_AUTH_ACTION_TYPES.LOGOUT_START,
 });
 
-const logoutFinished = (): LogoutFinishedAction => ({
+export const logoutFinished = (): LogoutFinishedAction => ({
   type: USER_AUTH_ACTION_TYPES.LOGOUT_FINISHED,
 });
 
-const logoutError = (error: string): LogoutErrorAction => ({
+export const logoutError = (error: string): LogoutErrorAction => ({
   type: USER_AUTH_ACTION_TYPES.LOGOUT_ERROR,
   error,
 });
 
 // Registration
-const registrationStart = (): RegistrationStartAction => ({
+export const registrationStart = (): RegistrationStartAction => ({
   type: USER_AUTH_ACTION_TYPES.REGISTRATION_START,
 });
 
-const registrationFinished = (user: User): RegistrationFinishedAction => ({
+export const registrationFinished = (
+  user: User
+): RegistrationFinishedAction => ({
   type: USER_AUTH_ACTION_TYPES.REGISTRATION_FINISHED,
   user,
 });
 
-const registrationError = (error: string): RegistrationErrorAction => ({
+export const registrationError = (error: string): RegistrationErrorAction => ({
   type: USER_AUTH_ACTION_TYPES.REGISTRATION_ERROR,
   error,
 });

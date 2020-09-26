@@ -22,6 +22,7 @@ describe("RegistrationScreen", () => {
       { userAuth: initialState },
       <RegistrationScreen {...props} />
     );
+    store.dispatch = jest.fn();
   });
 
   it("shows registration form", () => {
