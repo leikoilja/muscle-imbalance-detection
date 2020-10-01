@@ -10,7 +10,7 @@
   "jest": {
     "preset": "jest-expo",
     "setupFiles": [
-      "<rootDir>/jest/setup.js"
+      "<rootDir>/src/config/jest.js"
     ]
   },
   "dependencies": {
