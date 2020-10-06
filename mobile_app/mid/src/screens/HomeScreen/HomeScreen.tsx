@@ -11,6 +11,11 @@ class HomeScreen extends React.Component {
     await logoutUser();
   };
 
+  onSettings = () => {
+    const { navigation } = this.props;
+    navigation.navigate("Settings");
+  };
+
   render() {
     const { user } = this.props.auth;
 
@@ -20,6 +25,13 @@ class HomeScreen extends React.Component {
         {user.isDoctor && <Text testID="doctor-info">You are doctor!</Text>}
         <TouchableOpacity style={styles.button} onPress={this.onLogout}>
           <Text style={styles.buttonTitle}>Log out</Text>
+        </TouchableOpacity>
+        <Text>
+          Looks like you have no Bluetooth module setup, please go to 'My
+          Profile' and navigate to 'Settings' to do so!
+        </Text>
+        <TouchableOpacity style={styles.button} onPress={this.onSettings}>
+          <Text style={styles.buttonTitle}>Settings</Text>
         </TouchableOpacity>
       </View>
     );
