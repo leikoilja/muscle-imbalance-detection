@@ -190,6 +190,7 @@ exports[`RegistrationScreen shows registration form 1`] = `
               "color": "white",
               "fontSize": 16,
               "fontWeight": "bold",
+              "textAlign": "center",
             }
           }
         >

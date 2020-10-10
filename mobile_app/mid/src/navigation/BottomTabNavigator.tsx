@@ -8,6 +8,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "./types";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
+import { TouchableOpacity, View } from "react-native";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const TabOneStack = createStackNavigator<TabOneParamList>();
@@ -15,6 +16,23 @@ const TabTwoStack = createStackNavigator<TabTwoParamList>();
 
 function TabBarIcon(props: { name: string; color: string }) {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
+}
+
+function SettingsButton(navigate) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        paddingRight: 10,
+        width: 120,
+      }}
+    >
+      <TouchableOpacity onPress={() => navigate("Settings")}>
+        <TabBarIcon name="ios-settings" />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 export default function BottomTabNavigator() {
@@ -26,20 +44,20 @@ export default function BottomTabNavigator() {
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
     >
       <BottomTab.Screen
-        name="TabOne"
+        name="Data & Analysis"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-body" color={color} />
+            <TabBarIcon name="ios-stats" color={color} />
           ),
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="My Profile"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-stats" color={color} />
+            <TabBarIcon name="ios-body" color={color} />
           ),
         }}
       />
@@ -47,25 +65,31 @@ export default function BottomTabNavigator() {
   );
 }
 
-function TabOneNavigator() {
+function TabOneNavigator({ navigation }) {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ headerTitle: "Home Screen with Redux" }}
+        options={{
+          title: "Muscle Imbalance Detection",
+          headerRight: () => SettingsButton(navigation.navigate),
+        }}
       />
     </TabOneStack.Navigator>
   );
 }
 
-function TabTwoNavigator() {
+function TabTwoNavigator({ navigation }) {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
         name="TabTwoScreen"
         component={TabTwoScreen}
-        options={{ headerTitle: "Tab Two Title" }}
+        options={{
+          title: "My Profile",
+          headerRight: () => SettingsButton(navigation.navigate),
+        }}
       />
     </TabTwoStack.Navigator>
   );

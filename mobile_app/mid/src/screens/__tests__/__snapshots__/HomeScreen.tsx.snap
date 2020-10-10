@@ -53,10 +53,52 @@ exports[`HomeScreen shows extra content for doctor 1`] = `
           "color": "white",
           "fontSize": 16,
           "fontWeight": "bold",
+          "textAlign": "center",
         }
       }
     >
       Log out
+    </Text>
+  </View>
+  <Text>
+    Looks like you have no Bluetooth module setup, please go to 'My Profile' and navigate to 'Settings' to do so!
+  </Text>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#788eec",
+        "borderRadius": 5,
+        "height": 48,
+        "justifyContent": "center",
+        "marginLeft": 30,
+        "marginRight": 30,
+        "marginTop": 20,
+        "opacity": 1,
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "white",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "textAlign": "center",
+        }
+      }
+    >
+      Settings
     </Text>
   </View>
 </View>
@@ -110,10 +152,52 @@ exports[`HomeScreen shows welcome screen for user 1`] = `
           "color": "white",
           "fontSize": 16,
           "fontWeight": "bold",
+          "textAlign": "center",
         }
       }
     >
       Log out
+    </Text>
+  </View>
+  <Text>
+    Looks like you have no Bluetooth module setup, please go to 'My Profile' and navigate to 'Settings' to do so!
+  </Text>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#788eec",
+        "borderRadius": 5,
+        "height": 48,
+        "justifyContent": "center",
+        "marginLeft": 30,
+        "marginRight": 30,
+        "marginTop": 20,
+        "opacity": 1,
+        "width": "50%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "white",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "textAlign": "center",
+        }
+      }
+    >
+      Settings
     </Text>
   </View>
 </View>

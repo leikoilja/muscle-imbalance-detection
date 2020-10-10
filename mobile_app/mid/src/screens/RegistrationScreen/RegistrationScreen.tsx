@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { registerUser } from "../../state/user-auth/actions";
 import styles from "./styles";
 import { connect } from "react-redux";
+import Button from "../../components/Button";
 
 class RegistrationScreen extends Component {
   state = {
@@ -91,13 +92,11 @@ class RegistrationScreen extends Component {
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <TouchableOpacity
+          <Button
             testID="form-registration-button"
-            style={styles.button}
             onPress={this.onRegisterPress}
-          >
-            <Text style={styles.buttonTitle}>Create account</Text>
-          </TouchableOpacity>
+            text="Create account"
+          />
           <View style={styles.footerView}>
             <Text style={styles.footerText}>
               Already got an account?{" "}
