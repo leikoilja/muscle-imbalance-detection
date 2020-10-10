@@ -11,7 +11,9 @@
     "preset": "jest-expo",
     "setupFiles": [
       "<rootDir>/src/config/jest.js"
-    ]
+    ],
+    "globalSetup": "<rootDir>/src/config/setupTests.tsx",
+    "globalTeardown": "<rootDir>/src/config/teardownTests.tsx"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.2.1",
