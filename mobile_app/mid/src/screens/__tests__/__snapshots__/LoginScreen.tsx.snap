@@ -147,6 +147,7 @@ exports[`LoginScreen shows login form if not logged in 1`] = `
             "color": "white",
             "fontSize": 16,
             "fontWeight": "bold",
+            "textAlign": "center",
           }
         }
       >
