@@ -2,6 +2,7 @@ import React from "react";
 
 import { Provider } from "react-redux";
 import RootNavigator from "./navigation/RootNavigator";
+import Toast from "react-native-toast-message";
 
 import configureStore from "./state/store";
 import useCachedResources from "./hooks/useCachedResources";
@@ -18,6 +19,7 @@ export default function App() {
     return (
       <Provider store={store}>
         <RootNavigator />
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </Provider>
     );
   }

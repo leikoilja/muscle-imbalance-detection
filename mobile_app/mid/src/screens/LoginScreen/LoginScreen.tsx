@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import styles from "./styles";
 import { loginUser } from "../../state/user-auth/actions";
 import { connect } from "react-redux";
+import Button from "../../components/Button";
 
 class LoginScreen extends Component {
   state = {
@@ -94,13 +95,11 @@ class LoginScreen extends Component {
           onChangeText={(e) => this.onChange(e, "password")}
           placeholder="Password"
         />
-        <TouchableOpacity
+        <Button
           testID="form-login-button"
-          style={styles.button}
           onPress={this.onLoginPress}
-        >
-          <Text style={styles.buttonTitle}>Log in</Text>
-        </TouchableOpacity>
+          text="Log in"
+        />
         <View style={styles.footerView}>
           <Text style={styles.footerText} testID="form-footer-desc">
             Don't have an account?{" "}
