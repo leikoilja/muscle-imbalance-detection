@@ -16,4 +16,4 @@ jobs:
           yarn install
       - name: Run tests
         run: |
-          yarn test -- --watchAll=false
+          yarn test --watchAll=false
