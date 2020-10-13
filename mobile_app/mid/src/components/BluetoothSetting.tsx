@@ -16,15 +16,35 @@ import RNBluetoothClassic, {
 } from "react-native-bluetooth-classic";
 import Toast from "react-native-toast-message";
 import Button from "../components/Button";
+import { connect } from "react-redux";
+
+import { saveBtDevice, updateDeviceIsConnected } from "../state/bt/actions";
+
+export async function connectToDevice(
+  device,
+  saveBtDevice,
+  updateDeviceIsConnected
+) {
+  console.log(`Attempting connection to device ${device.id}`);
+  try {
+    await RNBluetoothClassic.setEncoding(BTCharsets.ASCII);
+    const connectedDevice = await RNBluetoothClassic.connect(device.id);
+    saveBtDevice(connectedDevice);
+    updateDeviceIsConnected(true);
+    return connectedDevice;
+  } catch (error) {
+    console.log(error.message);
+    Toast.show({
+      text1: "Unsuccessful connection",
+      text2: `Connection to ${device.name} unsuccessful`,
+      visibilityTime: 3000,
+      autoHide: true,
+    });
+  }
+}
 
 const InlineActivityIndicator = ({ animating }) => {
-  return (
-    <ActivityIndicator
-      size={"small"}
-      style={styles.inlineActivityIndicator}
-      animating={animating}
-    />
-  );
+  return <ActivityIndicator size="large" color="black" animating={animating} />;
 };
 
 const DeviceList = ({ devices, onPress, style, isConnecting }) => {
@@ -150,7 +170,7 @@ class ConnectionScreen extends React.Component {
   }
 }
 
-export default class BluetoothSetting extends React.Component {
+class BluetoothSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -277,28 +297,11 @@ export default class BluetoothSetting extends React.Component {
     this.setState(newState);
   }
 
-  async connectToDevice(device) {
-    console.log(`Attempting connection to device ${device.id}`);
-    this.setState({ isConnecting: true });
-    try {
-      await RNBluetoothClassic.setEncoding(BTCharsets.ASCII);
-      let connectedDevice = await RNBluetoothClassic.connect(device.id);
-      this.setState({ connectedDevice });
-    } catch (error) {
-      console.log(error.message);
-      Toast.show({
-        text1: "Unsuccessful connection",
-        text2: `Connection to ${device.name} unsuccessful`,
-        visibilityTime: 3000,
-        autoHide: true,
-      });
-    }
-    this.setState({ isConnecting: false });
-  }
-
   async disconnectFromDevice() {
+    const { updateDeviceIsConnected } = this.props;
     await RNBluetoothClassic.disconnect();
     this.setState({ connectedDevice: undefined });
+    updateDeviceIsConnected(false);
   }
 
   async discoverDevices() {
@@ -346,15 +349,27 @@ export default class BluetoothSetting extends React.Component {
   }
 
   refresh = () => this.refreshDevices();
-  selectDevice = (device) => this.connectToDevice(device);
-  unselectDevice = () => this.disconnectFromDevice();
+  selectDevice = async (device) => {
+    this.setState({ isConnecting: true });
+    const { saveBtDevice, updateDeviceIsConnected } = this.props;
+    const connectedDevice = await connectToDevice(
+      device,
+      saveBtDevice,
+      updateDeviceIsConnected
+    );
+    if (connectedDevice) {
+      this.setState({ connectedDevice });
+      // saveBtDevice(connectedDevice);
+    }
+    this.setState({ isConnecting: false });
+  };
+  unselectDevice = () => {
+    this.disconnectFromDevice();
+  };
   discover = () => this.discoverDevices();
   cancelDiscover = () => this.cancelDiscoverDevices();
 
   render() {
-    console.log("App.render()");
-    console.log(this.state);
-
     let connectedColor = !this.state.bluetoothEnabled
       ? styles.toolbarButton.color
       : "green";
@@ -370,7 +385,6 @@ export default class BluetoothSetting extends React.Component {
             device={this.state.connectedDevice}
             scannedData={this.state.scannedData}
             disconnect={this.unselectDevice}
-            onSend={this.onSend}
           />
         ) : (
           <View style={styles.container}>
@@ -402,6 +416,17 @@ export default class BluetoothSetting extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  bt: state.btReducer,
+});
+
+const mapDispatchToProps = {
+  saveBtDevice,
+  updateDeviceIsConnected,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BluetoothSetting);
 
 /**
  * The statusbar height goes wonky on Huawei with a notch - not sure if its the notch or the
@@ -479,9 +504,6 @@ const styles = StyleSheet.create({
   dataButton: {
     width: "100%",
     marginBottom: 10,
-  },
-  inlineActivityIndicator: {
-    marginLeft: 10,
   },
   startAcceptButton: {
     flexDirection: "row",
