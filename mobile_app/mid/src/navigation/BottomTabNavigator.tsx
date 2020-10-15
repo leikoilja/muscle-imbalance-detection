@@ -1,96 +1,81 @@
-import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
-import TabTwoScreen from "../screens/TabTwoScreen";
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+  Icon,
+} from "@ui-kitten/components";
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "./types";
-import HomeScreen from "../screens/HomeScreen/HomeScreen";
-import { TouchableOpacity, View } from "react-native";
+
+import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
+import DataScreen from "../screens/DataScreen/DataScreen";
+import SettingsScreen from "../screens/SettingsScreen/SettingsScreen";
+import BluetoothSettingScreen from "../screens/BluetoothSettingScreen/BluetoothSettingScreen";
+import ThemeSettingScreen from "../screens/ThemeSettingScreen/ThemeSettingScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
-const TabOneStack = createStackNavigator<TabOneParamList>();
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const DataStack = createStackNavigator<TabOneParamList>();
+const ProfileStack = createStackNavigator<TabTwoParamList>();
+const SettingsStack = createStackNavigator<TabTwoParamList>();
 
-function TabBarIcon(props: { name: string; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
-}
+const PersonIcon = (props) => <Icon {...props} name="person-outline" />;
+const GearIcon = (props) => <Icon {...props} name="settings-outline" />;
+const DataIcon = (props) => <Icon {...props} name="activity-outline" />;
 
-function SettingsButton(navigate) {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        paddingRight: 10,
-        width: 120,
-      }}
-    >
-      <TouchableOpacity onPress={() => navigate("Settings")}>
-        <TabBarIcon name="ios-settings" />
-      </TouchableOpacity>
-    </View>
-  );
-}
+const BottomTabBar = ({ navigation, state }) => (
+  <BottomNavigation
+    selectedIndex={state.index}
+    onSelect={(index) => navigation.navigate(state.routeNames[index])}
+  >
+    <BottomNavigationTab title="DATA & ANALYSIS" icon={DataIcon} />
+    <BottomNavigationTab title="PROFILE" icon={PersonIcon} />
+    <BottomNavigationTab title="SETTINGS" icon={GearIcon} />
+  </BottomNavigation>
+);
 
 export default function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      tabBar={(props) => <BottomTabBar {...props} />}
     >
-      <BottomTab.Screen
-        name="Data & Analysis"
-        component={TabOneNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-stats" color={color} />
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name="My Profile"
-        component={TabTwoNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-body" color={color} />
-          ),
-        }}
-      />
+      <BottomTab.Screen name="Data & Analysis" component={TabOneNavigator} />
+      <BottomTab.Screen name="My Profile" component={TabTwoNavigator} />
+      <BottomTab.Screen name="Settings" component={TabThreeNavigator} />
     </BottomTab.Navigator>
   );
 }
 
 function TabOneNavigator({ navigation }) {
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{
-          title: "Muscle Imbalance Detection",
-          headerRight: () => SettingsButton(navigation.navigate),
-        }}
-      />
-    </TabOneStack.Navigator>
+    <DataStack.Navigator>
+      <DataStack.Screen name="DataScreen" component={DataScreen} />
+    </DataStack.Navigator>
   );
 }
 
 function TabTwoNavigator({ navigation }) {
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{
-          title: "My Profile",
-          headerRight: () => SettingsButton(navigation.navigate),
-        }}
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="ProfileScreen" component={ProfileScreen} />
+    </ProfileStack.Navigator>
+  );
+}
+
+function TabThreeNavigator({ navigation }) {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <SettingsStack.Screen
+        name="BluetoothSettingScreen"
+        component={BluetoothSettingScreen}
       />
-    </TabTwoStack.Navigator>
+      <SettingsStack.Screen
+        name="ThemeSettingScreen"
+        component={ThemeSettingScreen}
+      />
+    </SettingsStack.Navigator>
   );
 }

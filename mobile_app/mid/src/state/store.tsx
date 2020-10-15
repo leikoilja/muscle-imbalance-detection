@@ -1,18 +1,18 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import thunkMiddleware from "redux-thunk";
-import { userAuth } from "./user-auth/reducers";
-import { btReducer } from "./bt/reducers";
-import logger from "redux-logger";
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import logger from 'redux-logger';
+import { userAuth } from './user-auth/reducers';
+import { settingsReducer } from './settings/reducers';
 
 const rootReducer = combineReducers({
-  userAuth, // this is the user-auth reducer
-  btReducer, // bluetooth reducers
+  userAuth, // user-auth reducer
+  settingsReducer, // settings reducers
 });
 
 export default () => {
   const store = createStore(
     rootReducer,
-    applyMiddleware(thunkMiddleware, logger)
+    applyMiddleware(thunkMiddleware, logger),
   );
   return { store };
 };

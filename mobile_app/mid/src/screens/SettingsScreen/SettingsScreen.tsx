@@ -1,30 +1,35 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Text, View, TouchableOpacity, Platform } from "react-native";
-import styles from "./styles";
-import BluetoothSetting from "../../components/BluetoothSetting";
+import { Platform } from 'react-native';
 
-export default class SettingsScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.settingBlock}>
-          <View style={styles.settingTitle}>
-            <Text style={styles.settingTitleText}>Bluetooth settings</Text>
-          </View>
-          <View style={styles.settingBody}>
-            {Platform.OS === "android" ? (
-              <BluetoothSetting />
-            ) : (
-              <Text style={styles.settingNotSupported}>
-                We are sorry, but your OS is not supported for automatic device
-                discovery and connection. Please go to system settings and
-                connect to the Bluetooth device
-              </Text>
-            )}
-          </View>
-        </View>
-      </View>
-    );
-  }
+import {
+  Button,
+  Layout,
+  Text,
+  Divider,
+  Menu,
+  MenuItem,
+} from '@ui-kitten/components';
+import styles from './styles';
+
+export default function SettingsScreen({ navigation }) {
+  const onBluetoothSettingPress = () => {
+    navigation.navigate('BluetoothSettingScreen');
+  };
+
+  const onThemeSettingPress = () => {
+    navigation.navigate('ThemeSettingScreen');
+  };
+
+  return (
+    <Layout style={styles.container}>
+      <Text category="h6" style={styles.title}>
+        Settings
+      </Text>
+      <Menu>
+        <MenuItem title="Bluetooth" onPress={onBluetoothSettingPress} />
+        <MenuItem title="UI Theme" onPress={onThemeSettingPress} />
+      </Menu>
+    </Layout>
+  );
 }

@@ -6,18 +6,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  button: {
+    width: '50%',
+  },
   descText: {
     textAlign: 'center',
     marginBottom: 20,
-  },
-  input: {
-    width: '80%',
-    borderRadius: 5,
-    overflow: 'hidden',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  button: {
-    width: '40%',
+    marginHorizontal: 10,
   },
 });

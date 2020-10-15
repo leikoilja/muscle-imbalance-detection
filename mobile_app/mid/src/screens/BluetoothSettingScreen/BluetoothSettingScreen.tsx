@@ -1,24 +1,29 @@
-import React from "react";
+import * as React from "react";
+import { View, TouchableOpacity, FlatList } from "react-native";
 import {
+  Button,
+  ButtonGroup,
+  Layout,
+  Spinner,
+  Icon,
+  TopNavigation,
+  TopNavigationAction,
   Text,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  Platform,
-  FlatList,
-  StyleSheet,
-  TextInput,
-  ActivityIndicator,
-} from "react-native";
+} from "@ui-kitten/components";
 import RNBluetoothClassic, {
   BTEvents,
   BTCharsets,
 } from "react-native-bluetooth-classic";
 import Toast from "react-native-toast-message";
-import Button from "../components/Button";
 import { connect } from "react-redux";
+import styles from "./styles";
 
-import { saveBtDevice, updateDeviceIsConnected } from "../state/bt/actions";
+import {
+  saveBtDevice,
+  updateDeviceIsConnected,
+} from "../../state/settings/actions";
+
+const BackIcon = (props) => <Icon {...props} name="arrow-back" />;
 
 export async function connectToDevice(
   device,
@@ -43,41 +48,34 @@ export async function connectToDevice(
   }
 }
 
-const InlineActivityIndicator = ({ animating }) => {
-  return <ActivityIndicator size="large" color="black" animating={animating} />;
-};
-
 const DeviceList = ({ devices, onPress, style, isConnecting }) => {
   console.log("DeviceList.render()");
   console.log(devices);
 
+  const LoadingIndicator = (props) => (
+    <>
+      {isConnecting && (
+        <View style={[props.style, styles.connectingSpinner]}>
+          <Spinner size="small" />
+        </View>
+      )}
+    </>
+  );
   return (
-    <ScrollView
-      style={styles.listContainer}
-      contentContainerStyle={styles.container}
-    >
+    <Layout style={styles.listContainer}>
       {devices.map((device, i) => {
-        let bgColor = device.connected
-          ? "#0f0"
-          : styles.connectionStatus.backgroundColor;
         return (
-          <TouchableOpacity
-            key={device.id}
-            style={[styles.button, style]}
+          <Button
+            style={styles.listElement}
             onPress={() => onPress(device)}
+            status="basic"
+            accessoryRight={LoadingIndicator}
           >
-            <View
-              style={[styles.connectionStatus, { backgroundColor: bgColor }]}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.deviceName}>{device.name}</Text>
-              <Text>{device.address}</Text>
-            </View>
-            <InlineActivityIndicator animating={isConnecting} />
-          </TouchableOpacity>
+            {device.name}(MAC: {device.address})
+          </Button>
         );
       })}
-    </ScrollView>
+    </Layout>
   );
 };
 
@@ -96,33 +94,12 @@ class ConnectionScreen extends React.Component {
       this.handleRead,
       this
     );
-    //this.poll = setInterval(() => this.pollForData(), 3000);
   }
 
   componentWillUnmount() {
     this.onRead.remove();
-    //clearInterval(this.poll);
-
     RNBluetoothClassic.disconnect();
   }
-
-  // pollForData = async () => {
-  //   var available = 0;
-  //
-  //   do {
-  //     console.log("Checking for available data");
-  //     available = await RNBluetoothClassic.available();
-  //     console.log(`There are ${available} bytes of data available`);
-  //
-  //     if (available > 0) {
-  //       console.log("Attempting to read the next message from the device");
-  //       const data = await RNBluetoothClassic.readFromDevice();
-  //
-  //       console.log(data);
-  //       this.handleRead({ data });
-  //     }
-  //   } while (available > 0);
-  // };
 
   handleRead = (data) => {
     data.timestamp = new Date();
@@ -136,11 +113,11 @@ class ConnectionScreen extends React.Component {
     console.log(this.state);
 
     return (
-      <View style={styles.dataContainer}>
+      <Layout style={styles.dataContainer}>
         <Text style={styles.dataTitle}>
           Real-time data received from {this.props.device.name}
         </Text>
-        <View style={styles.container}>
+        <Layout style={styles.container}>
           <FlatList
             style={{ flex: 1 }}
             contentContainerStyle={{ justifyContent: "flex-end" }}
@@ -149,23 +126,19 @@ class ConnectionScreen extends React.Component {
             data={this.state.scannedData}
             keyExtractor={(item, index) => item.timestamp.toISOString()}
             renderItem={({ item }) => (
-              <View
+              <Layout
                 id={item.timestamp.toISOString()}
                 style={{ flexDirection: "row", justifyContent: "flex-start" }}
               >
                 <Text>{item.timestamp.toTimeString().split(" ")[0]}</Text>
                 <Text>{item.type === "sent" ? " < " : " > "}</Text>
                 <Text style={{ flexShrink: 1 }}>{item.data.trim()}</Text>
-              </View>
+              </Layout>
             )}
           />
-        </View>
-        <Button
-          style={styles.dataButton}
-          onPress={this.props.disconnect}
-          text="Disconnect"
-        />
-      </View>
+        </Layout>
+        <Button onPress={this.props.disconnect}>Disconnect</Button>
+      </Layout>
     );
   }
 }
@@ -260,6 +233,15 @@ class BluetoothSetting extends React.Component {
     });
     this.initialize();
   }
+
+  onBackPress = () => {
+    const { navigation } = this.props;
+    navigation.goBack();
+  };
+
+  BackAction = () => (
+    <TopNavigationAction icon={BackIcon} onPress={this.onBackPress} />
+  );
 
   async initialize() {
     let enabled = await RNBluetoothClassic.isEnabled();
@@ -370,55 +352,60 @@ class BluetoothSetting extends React.Component {
   cancelDiscover = () => this.cancelDiscoverDevices();
 
   render() {
-    let connectedColor = !this.state.bluetoothEnabled
-      ? styles.toolbarButton.color
-      : "green";
-
     let discoverFn = !this.state.isDiscovering
       ? () => this.discover()
       : () => this.cancelDiscover();
 
     return (
-      <View style={styles.container}>
-        {this.state.connectedDevice ? (
-          <ConnectionScreen
-            device={this.state.connectedDevice}
-            scannedData={this.state.scannedData}
-            disconnect={this.unselectDevice}
-          />
+      <Layout style={styles.container}>
+        <TopNavigation accessoryLeft={this.BackAction} title="Go Back" />
+        {Platform.OS === "android" ? (
+          <>
+            {this.state.connectedDevice ? (
+              <ConnectionScreen
+                device={this.state.connectedDevice}
+                scannedData={this.state.scannedData}
+                disconnect={this.unselectDevice}
+              />
+            ) : (
+              <Layout style={styles.container}>
+                <DeviceList
+                  devices={this.state.deviceList}
+                  onPress={this.selectDevice}
+                  isConnecting={this.state.isConnecting}
+                />
+                {this.state.isDiscovering && (
+                  <Layout style={styles.discoverySpinner}>
+                    <Spinner />
+                  </Layout>
+                )}
+                <ButtonGroup>
+                  <Button style={styles.button} onPress={this.refresh}>
+                    Refresh device list
+                  </Button>
+                  <Button style={styles.button} onPress={discoverFn}>
+                    {this.state.isDiscovering
+                      ? "Cancel discovering"
+                      : "Discover devices"}
+                  </Button>
+                </ButtonGroup>
+              </Layout>
+            )}
+          </>
         ) : (
-          <View style={styles.container}>
-            <DeviceList
-              devices={this.state.deviceList}
-              onPress={this.selectDevice}
-              isConnecting={this.state.isConnecting}
-            />
-            <InlineActivityIndicator animating={this.state.isDiscovering} />
-            <View style={styles.buttonGroup}>
-              <Button
-                onPress={this.refresh}
-                style={{ marginLeft: null, marginRight: null, width: "40%" }}
-                text="Refresh paired device list"
-              />
-              <Button
-                style={{ marginLeft: null, marginRight: null, width: "40%" }}
-                onPress={discoverFn}
-                text={
-                  this.state.isDiscovering
-                    ? "Cancel discovering"
-                    : "Discover devices"
-                }
-              />
-            </View>
-          </View>
+          <Text style={styles.settingNotSupported}>
+            We are sorry, but your OS is not supported for automatic device
+            discovery and connection. Please go to system settings and connect
+            to the Bluetooth device
+          </Text>
         )}
-      </View>
+      </Layout>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  bt: state.btReducer,
+  bt: state.settingsReducer.bt,
 });
 
 const mapDispatchToProps = {
@@ -427,113 +414,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BluetoothSetting);
-
-/**
- * The statusbar height goes wonky on Huawei with a notch - not sure if its the notch or the
- * Huawei but the fact that the notch is different than the status bar makes the statusbar
- * go below the notch (even when the notch is on).
- */
-const APPBAR_HEIGHT = Platform.OS === "ios" ? 44 : 56;
-
-const styles = StyleSheet.create({
-  statusbar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#222",
-  },
-  toolbar: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: "#222",
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 16,
-    paddingRight: 16,
-    height: APPBAR_HEIGHT,
-  },
-  toolbarText: {
-    flex: 1,
-    fontSize: 20,
-    color: "red",
-  },
-  toolbarButton: {
-    fontSize: 20,
-    color: "red",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-  },
-  listContainer: {
-    flex: 1,
-  },
-  button: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  buttonGroup: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "stretch",
-    marginBottom: 10,
-  },
-  refreshButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#999",
-    padding: 9,
-    marginBottom: 9,
-  },
-  dataContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dataTitle: {
-    marginBottom: 10,
-  },
-  dataButton: {
-    width: "100%",
-    marginBottom: 10,
-  },
-  startAcceptButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#333",
-    padding: 9,
-    marginBottom: 9,
-  },
-  deviceName: {
-    fontSize: 16,
-  },
-  connectionStatus: {
-    width: 8,
-    backgroundColor: "#ccc",
-    marginRight: 16,
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  horizontalContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-  },
-  textInput: {
-    flex: 1,
-    height: 40,
-  },
-});

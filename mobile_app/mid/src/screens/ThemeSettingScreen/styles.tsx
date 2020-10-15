@@ -4,9 +4,9 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
-  title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    margin: 20,
+  main: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
