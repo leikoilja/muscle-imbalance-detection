@@ -25,7 +25,6 @@ class ProfileScreen extends React.Component {
   );
 
   render() {
-    // USER {"fullName": "User Userson", "isDoctor": false, "isSuperuser": false, "user": {"apiKey": "AIzaSyCPCyFcDib1pB0zmGLjskurxKoskrkf0to", "appName": "[DEFAULT]", "authDomain": "muscle-imbalance-detection.firebaseapp.com", "createdAt": "1600707193540", "displayName": null, "email": "user@mid.com", "emailVerified": false, "isAnonymous": false, "lastLoginAt": "1602764768011", "multiFactor": [Object], "phoneNumber": null, "photoURL": null, "providerData": [Array], "redirectEventId": null, "stsTokenManager": [Object], "tenantId": null, "uid": "JgEowTJQWgWXn2qVagulsYJeWcI2"}}
     const { user, device } = this.props;
     const data = [
       {
