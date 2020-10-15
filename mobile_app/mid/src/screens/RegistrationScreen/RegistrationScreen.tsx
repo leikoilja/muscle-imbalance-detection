@@ -1,10 +1,15 @@
 import React, { useState, Component } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { registerUser } from "../../state/user-auth/actions";
 import styles from "./styles";
 import { connect } from "react-redux";
-import Button from "../../components/Button";
+import {
+  Input,
+  Button,
+  ButtonGroup,
+  Layout,
+  Text,
+} from "@ui-kitten/components";
 
 class RegistrationScreen extends Component {
   state = {
@@ -40,40 +45,29 @@ class RegistrationScreen extends Component {
       fullNameValue,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <KeyboardAwareScrollView
-          style={{ flex: 1, width: "100%" }}
-          keyboardShouldPersistTaps="always"
-        >
-          <Image
-            style={styles.logo}
-            testID="form-logo"
-            source={require("../../assets/images/logo.png")}
-          />
-          <TextInput
+      <Layout style={styles.container}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+          <Input
             testID="form-fullName-input"
             style={styles.input}
             placeholder="Full Name"
-            placeholderTextColor="#aaaaaa"
             onChangeText={(text) => this.onChange(text, "fullName")}
             value={fullNameValue}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <TextInput
+          <Input
             testID="form-email-input"
             style={styles.input}
             placeholder="E-mail"
-            placeholderTextColor="#aaaaaa"
             onChangeText={(text) => this.onChange(text, "email")}
             value={emailValue}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <TextInput
+          <Input
             testID="form-password-input"
             style={styles.input}
-            placeholderTextColor="#aaaaaa"
             secureTextEntry
             placeholder="Password"
             onChangeText={(text) => this.onChange(text, "password")}
@@ -81,10 +75,9 @@ class RegistrationScreen extends Component {
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <TextInput
+          <Input
             testID="form-confirmPassword-input"
             style={styles.input}
-            placeholderTextColor="#aaaaaa"
             secureTextEntry
             placeholder="Confirm Password"
             onChangeText={(text) => this.onChange(text, "confirmPassword")}
@@ -92,25 +85,12 @@ class RegistrationScreen extends Component {
             underlineColorAndroid="transparent"
             autoCapitalize="none"
           />
-          <Button
-            testID="form-registration-button"
-            onPress={this.onRegisterPress}
-            text="Create account"
-          />
-          <View style={styles.footerView}>
-            <Text style={styles.footerText}>
-              Already got an account?{" "}
-              <Text
-                testID="form-footer-button"
-                onPress={this.onFooterLinkPress}
-                style={styles.footerLink}
-              >
-                Log in
-              </Text>
-            </Text>
-          </View>
+          <ButtonGroup>
+            <Button onPress={this.onRegisterPress}>Create an account</Button>
+            <Button onPress={this.onFooterLinkPress}>Back to log in</Button>
+          </ButtonGroup>
         </KeyboardAwareScrollView>
-      </View>
+      </Layout>
     );
   }
 }

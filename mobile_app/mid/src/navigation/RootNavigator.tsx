@@ -23,9 +23,10 @@ class RootNavigator extends Component {
     return (
       <NavigationContainer>
         <RootStack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
+          headerMode={false}
+          // screenOptions={{
+          //   headerShown: false,
+          // }}
         >
           {loggedIn ? (
             <>

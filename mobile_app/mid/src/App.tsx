@@ -1,26 +1,32 @@
-import React from "react";
+import React from 'react';
 
-import { Provider } from "react-redux";
-import RootNavigator from "./navigation/RootNavigator";
-import Toast from "react-native-toast-message";
+import Toast from 'react-native-toast-message';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { SafeAreaView } from 'react-native';
+import { connect } from 'react-redux';
+import RootNavigator from './navigation/RootNavigator';
 
-import configureStore from "./state/store";
-import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
-
-const { store } = configureStore();
-
-export default function App() {
-  const isLoadingComplete = useCachedResources();
-  // const colorScheme = useColorScheme();
-  if (!isLoadingComplete) {
-    return null;
-  } else {
+class App extends React.Component {
+  render() {
+    const { theme } = this.props;
     return (
-      <Provider store={store}>
-        <RootNavigator />
+      <ApplicationProvider {...eva} theme={eva[theme]}>
         <Toast ref={(ref) => Toast.setRef(ref)} />
-      </Provider>
+        <IconRegistry icons={EvaIconsPack} />
+        <SafeAreaView style={{ flex: 1 }}>
+          <RootNavigator />
+        </SafeAreaView>
+      </ApplicationProvider>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  theme: state.settingsReducer.theme,
+});
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

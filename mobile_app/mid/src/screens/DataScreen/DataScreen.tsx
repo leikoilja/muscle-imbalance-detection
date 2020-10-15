@@ -1,11 +1,14 @@
 import * as React from "react";
 
-import { Text, View, TouchableOpacity, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
+import { Button, Layout, Text, Divider } from "@ui-kitten/components";
 import styles from "./styles";
 import { connect } from "react-redux";
 import { logoutUser } from "../../state/user-auth/actions";
-import { saveBtDevice, updateDeviceIsConnected } from "../../state/bt/actions";
-import Button from "../../components/Button";
+import {
+  saveBtDevice,
+  updateDeviceIsConnected,
+} from "../../state/settings/actions";
 import BluetoothConnectedDataGraph from "../../components/BluetoothConnectedDataGraph";
 
 class HomeScreen extends React.Component {
@@ -16,7 +19,7 @@ class HomeScreen extends React.Component {
 
   onSettings = () => {
     const { navigation } = this.props;
-    navigation.navigate("Settings");
+    navigation.navigate("Settings", { screen: "BluetoothSettingScreen" });
   };
 
   render() {
@@ -24,9 +27,10 @@ class HomeScreen extends React.Component {
     const { device } = this.props.bt;
 
     return (
-      <View style={styles.container}>
-        <Text testID="welcome-text">Welcome, {user.fullName} </Text>
+      <Layout style={styles.container}>
+        <Text testID="welcome-text">Welcome, {user.fullName}!</Text>
         {user.isDoctor && <Text testID="doctor-info">You are doctor!</Text>}
+        <Divider />
         {device.address ? (
           <>
             <BluetoothConnectedDataGraph
@@ -38,7 +42,7 @@ class HomeScreen extends React.Component {
           </>
         ) : (
           <>
-            <Text>
+            <Text style={styles.descText}>
               Looks like you have no Bluetooth module setup yet, please go to
               'Settings' to do so!
             </Text>
@@ -46,24 +50,19 @@ class HomeScreen extends React.Component {
               testID="button-settings"
               style={{ width: "50%" }}
               onPress={this.onSettings}
-              text="Settings"
-            />
+            >
+              Bluetooth Settings
+            </Button>
           </>
         )}
-        <Button
-          testID="button-logout"
-          style={{ width: "50%" }}
-          onPress={this.onLogout}
-          text="Log out"
-        />
-      </View>
+      </Layout>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
   auth: state.userAuth,
-  bt: state.btReducer,
+  bt: state.settingsReducer.bt,
 });
 
 const mapDispatchToProps = {

@@ -1,17 +1,16 @@
 import React, { useState, Component } from "react";
-import {
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Alert,
-} from "react-native";
+import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { loginUser } from "../../state/user-auth/actions";
 import { connect } from "react-redux";
-import Button from "../../components/Button";
+import {
+  Input,
+  Button,
+  ButtonGroup,
+  Layout,
+  Text,
+} from "@ui-kitten/components";
 
 class LoginScreen extends Component {
   state = {
@@ -64,55 +63,43 @@ class LoginScreen extends Component {
   render() {
     const { emailValue, passwordValue } = this.state;
     return (
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-        <Image
-          testID="form-logo"
-          style={styles.logo}
-          source={require("../../assets/images/logo.png")}
-        />
-        <Text testID="form-desc" style={styles.demoCredentials}>
-          During development and testing you can use the following credentials
-          (email/password): {"\n"}user@mid.com/password or
-          doctor@mid.com/password
-        </Text>
-        <TextInput
-          testID="form-email-input"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={emailValue}
-          onChangeText={(e) => this.onChange(e, "email")}
-          keyboardType="email-address"
-          placeholder="Email address"
-          style={styles.input}
-        />
-        <TextInput
-          testID="form-password-input"
-          style={styles.input}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry
-          value={passwordValue}
-          onChangeText={(e) => this.onChange(e, "password")}
-          placeholder="Password"
-        />
-        <Button
-          testID="form-login-button"
-          onPress={this.onLoginPress}
-          text="Log in"
-        />
-        <View style={styles.footerView}>
-          <Text style={styles.footerText} testID="form-footer-desc">
-            Don't have an account?{" "}
-            <Text
-              testID="form-footer-button"
-              onPress={this.onFooterLinkPress}
-              style={styles.footerLink}
-            >
-              Sign up
-            </Text>
+      <Layout style={styles.container}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+          <Text testID="form-desc" category="p1" style={styles.descText}>
+            During development and testing you can use the following credentials
+            (email/password): {"\n"}user@mid.com/password or
+            doctor@mid.com/password
           </Text>
-        </View>
-      </KeyboardAwareScrollView>
+          <Input
+            testID="form-email-input"
+            style={styles.input}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={emailValue}
+            onChangeText={(e) => this.onChange(e, "email")}
+            keyboardType="email-address"
+            placeholder="Email address"
+          />
+          <Input
+            testID="form-password-input"
+            style={styles.input}
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry
+            value={passwordValue}
+            onChangeText={(e) => this.onChange(e, "password")}
+            placeholder="Password"
+          />
+          <ButtonGroup>
+            <Button onPress={this.onLoginPress} style={styles.button}>
+              Sign In
+            </Button>
+            <Button onPress={this.onFooterLinkPress} style={styles.button}>
+              Sign Up
+            </Button>
+          </ButtonGroup>
+        </KeyboardAwareScrollView>
+      </Layout>
     );
   }
 }

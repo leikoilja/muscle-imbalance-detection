@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Text, Dimensions, ActivityIndicator } from "react-native";
+import { Dimensions } from "react-native";
+import { Text, Spinner } from "@ui-kitten/components";
 import { LineChart } from "react-native-chart-kit";
 import RNBluetoothClassic, { BTEvents } from "react-native-bluetooth-classic";
-import { connectToDevice } from "./BluetoothSetting";
 import { useFocusEffect } from "@react-navigation/native";
+import { connectToDevice } from "../screens/BluetoothSettingScreen/BluetoothSettingScreen";
 
 export default function BluetoothConnectedDataGraph({
   device,
@@ -48,7 +49,7 @@ export default function BluetoothConnectedDataGraph({
     <>
       {isConnecting ? (
         <>
-          <ActivityIndicator size="large" color="black" />
+          <Spinner size="large" />
           <Text>Connecting to "{device.name}"</Text>
         </>
       ) : (
@@ -139,8 +140,8 @@ class BTDataGraph extends React.Component {
         }}
         bezier
         style={{
-          marginVertical: 8,
-          borderRadius: 16,
+          margin: 10,
+          borderRadius: 10,
         }}
       />
     );
