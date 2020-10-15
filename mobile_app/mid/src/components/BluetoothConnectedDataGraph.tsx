@@ -29,6 +29,7 @@ export default function BluetoothConnectedDataGraph({
           );
           setIsConnecting(false);
           if (connectedDevice) {
+            setFailedToConnect(false);
             console.log("Connected to ", device);
           } else {
             setFailedToConnect(true);
@@ -48,12 +49,12 @@ export default function BluetoothConnectedDataGraph({
   return (
     <Layout style={styles.container}>
       {isConnecting ? (
-        <View>
+        <View style={styles.connectionContainer}>
           <Spinner size="large" />
           <Text style={styles.infoText}>Connecting to "{device.name}"</Text>
         </View>
       ) : (
-        <View>
+        <View style={styles.connectionContainer}>
           {failedToConnect ? (
             <Text style={[styles.infoText, styles.errorText]}>
               Failed to connect to "{device.name}"({device.address}). Try
@@ -151,6 +152,10 @@ class BTDataGraph extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  connectionContainer: {
     alignItems: "center",
     justifyContent: "center",
   },

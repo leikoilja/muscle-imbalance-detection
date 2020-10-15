@@ -13,8 +13,8 @@ export default StyleSheet.create({
   },
   profileImage: {
     marginVertical: 20,
-    width: 200,
-    height: 200,
+    width: 160,
+    height: 160,
   },
   button: {},
 });
