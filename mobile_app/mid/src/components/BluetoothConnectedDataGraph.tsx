@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Dimensions } from "react-native";
-import { Text, Spinner } from "@ui-kitten/components";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { Layout, Text, Spinner } from "@ui-kitten/components";
 import { LineChart } from "react-native-chart-kit";
 import RNBluetoothClassic, { BTEvents } from "react-native-bluetooth-classic";
 import { useFocusEffect } from "@react-navigation/native";
@@ -46,24 +46,25 @@ export default function BluetoothConnectedDataGraph({
   );
 
   return (
-    <>
+    <Layout style={styles.container}>
       {isConnecting ? (
-        <>
+        <View>
           <Spinner size="large" />
-          <Text>Connecting to "{device.name}"</Text>
-        </>
+          <Text style={styles.infoText}>Connecting to "{device.name}"</Text>
+        </View>
       ) : (
-        <>
+        <View>
           {failedToConnect ? (
-            <Text>
-              Failed to connect to "{device.name}"({device.address})
+            <Text style={[styles.infoText, styles.errorText]}>
+              Failed to connect to "{device.name}"({device.address}). Try
+              restarting your Bluetooth device and refresh this screen.
             </Text>
           ) : (
             <BTDataGraph device={device} />
           )}
-        </>
+        </View>
       )}
-    </>
+    </Layout>
   );
 }
 
@@ -147,3 +148,16 @@ class BTDataGraph extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  infoText: {
+    textAlign: "center",
+  },
+  errorText: {
+    color: "red",
+  },
+});
