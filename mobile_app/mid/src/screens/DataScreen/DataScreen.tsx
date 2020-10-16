@@ -28,12 +28,10 @@ class HomeScreen extends React.Component {
 
     return (
       <Layout style={styles.container}>
-        <Text testID="welcome-text">Welcome, {user.fullName}!</Text>
-        {user.isDoctor && <Text testID="doctor-info">You are doctor!</Text>}
-        <Divider />
         {device.address ? (
           <>
             <BluetoothConnectedDataGraph
+              userUid={user.user.uid}
               device={this.props.bt.device}
               isConnected={this.props.bt.isConnected}
               onSaveBtDevice={this.props.saveBtDevice}
