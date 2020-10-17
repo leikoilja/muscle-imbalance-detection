@@ -7,6 +7,7 @@ export const initialState: AuthState = {
   hasError: false,
   errorMessage: "",
   user: null,
+  measurements: [],
 };
 
 export const userAuth = (
@@ -84,6 +85,15 @@ export const userAuth = (
         isFetching: false,
         hasError: true,
         errorMessage: error.message,
+      };
+    }
+    case USER_AUTH_ACTION_TYPES.SAVE_MEASUREMENT: {
+      const { measurementUid } = action;
+      let measurements = state.measurements || [];
+      measurements.push(measurementUid);
+      return {
+        ...state,
+        measurements,
       };
     }
     default:

@@ -3,18 +3,25 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import {
   Layout,
   Text,
+  Icon,
   Spinner,
   ButtonGroup,
   Button,
 } from "@ui-kitten/components";
-import { LineChart } from "react-native-chart-kit";
 import RNBluetoothClassic, { BTEvents } from "react-native-bluetooth-classic";
 import { useFocusEffect } from "@react-navigation/native";
 import { connectToDevice } from "../screens/BluetoothSettingScreen/BluetoothSettingScreen";
 import { firebase } from "../firebase/config";
+import OrangeLineChart from "./OrangeLineChart";
+
+const PlayIcon = (props) => <Icon {...props} name="play-circle" />;
+const PauseIcon = (props) => <Icon {...props} name="pause-circle" />;
+const UploadIcon = (props) => <Icon {...props} name="cloud-upload" />;
+const CloseIcon = (props) => <Icon {...props} name="close-circle" />;
 
 export default function BluetoothConnectedDataGraph({
   userUid,
+  saveMeasurement,
   device,
   onSaveBtDevice,
   onUpdateDeviceIsConnected,
@@ -70,7 +77,11 @@ export default function BluetoothConnectedDataGraph({
               restarting your Bluetooth device and refresh this screen.
             </Text>
           ) : (
-            <BTDataGraph device={device} userUid={userUid} />
+            <BTDataGraph
+              device={device}
+              userUid={userUid}
+              saveMeasurement={saveMeasurement}
+            />
           )}
         </View>
       )}
@@ -163,23 +174,26 @@ class BTDataGraph extends React.Component {
   };
 
   onUploadPress = async () => {
-    console.log("uploading last recording", this.state.recordedData);
     const { userUid } = this.props;
-    console.log("USERID", userUid);
     const document = {
       userUid: userUid,
       measurements: this.state.recordedData.data,
     };
+    let measurementUid;
     await firebase
       .firestore()
-      .collection("recordings")
+      .collection("measurements")
       .add(document)
-      .then(function () {
-        console.log("Document successfully written!");
+      .then(function (response) {
+        console.log("Document successfully written!", response.id);
+        measurementUid = response.id;
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
       });
+    if (measurementUid) {
+      this.props.saveMeasurement(measurementUid);
+    }
     this.onCancelPress();
   };
 
@@ -196,8 +210,6 @@ class BTDataGraph extends React.Component {
       },
       isRecording: false,
     });
-    console.log("state", this.state.recordedData);
-    console.log("state", this.state.isRecording);
   };
 
   render() {
@@ -207,41 +219,18 @@ class BTDataGraph extends React.Component {
     const dataToShow = hasRecordedData
       ? this.state.recordedData
       : this.state.shownData;
-    const descText = hasRecordedData ? "Recorded data" : "Read-time data";
+    const descText = hasRecordedData ? "Recorded data" : "Real-time data";
     return (
       <Layout>
         <Text style={styles.descText}>{descText}</Text>
-        <LineChart
-          data={dataToShow}
-          width={Dimensions.get("window").width} // from react-native
-          height={220}
-          yAxisSuffix="mV"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "3",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          bezier
-          style={styles.graph}
-        />
+        <OrangeLineChart data={dataToShow} />
         <View style={styles.actionButtons}>
           {this.state.isRecording ? (
             <Button
               style={styles.button}
               status="danger"
               onPress={this.onStopRecordPress}
+              accessoryRight={PauseIcon}
             >
               Stop recording
             </Button>
@@ -253,6 +242,7 @@ class BTDataGraph extends React.Component {
                     style={styles.button}
                     status="success"
                     onPress={this.onUploadPress}
+                    accessoryRight={UploadIcon}
                   >
                     Upload recorded data
                   </Button>
@@ -260,6 +250,7 @@ class BTDataGraph extends React.Component {
                     style={styles.button}
                     status="info"
                     onPress={this.onCancelPress}
+                    accessoryRight={CloseIcon}
                   >
                     Cancel
                   </Button>
@@ -269,6 +260,7 @@ class BTDataGraph extends React.Component {
                   style={styles.button}
                   status="success"
                   onPress={this.onRecordPress}
+                  accessoryRight={PlayIcon}
                 >
                   Record measurements
                 </Button>
@@ -293,6 +285,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     textAlign: "center",
+    marginTop: 20,
   },
   errorText: {
     color: "red",
