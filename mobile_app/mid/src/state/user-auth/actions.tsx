@@ -27,6 +27,7 @@ export enum USER_AUTH_ACTION_TYPES {
   REGISTRATION_START = "USER_AUTH/REGISTRATION_START",
   REGISTRATION_FINISHED = "USER_AUTH/REGISTRATION_FINISHED",
   REGISTRATION_ERROR = "USER_AUTH/REGISTRATION_ERROR",
+  SAVE_MEASUREMENT = "USER/SAVE_MEASUREMENT",
 }
 
 // Login
@@ -73,6 +74,12 @@ export const registrationFinished = (
 export const registrationError = (error: string): RegistrationErrorAction => ({
   type: USER_AUTH_ACTION_TYPES.REGISTRATION_ERROR,
   error,
+});
+
+// User related
+export const saveMeasurement = (measurementUid: string) => ({
+  type: USER_AUTH_ACTION_TYPES.SAVE_MEASUREMENT,
+  measurementUid,
 });
 
 //

@@ -393,11 +393,12 @@ class BluetoothSetting extends React.Component {
             )}
           </>
         ) : (
-          <Text style={styles.settingNotSupported}>
-            We are sorry, but your OS is not supported for automatic device
-            discovery and connection. Please go to system settings and connect
-            to the Bluetooth device
-          </Text>
+          <View style={styles.settingNotSupportedContainer}>
+            <Text style={styles.settingNotSupportedText}>
+              We are sorry, but your OS is currently not supporting Bluetooth
+              connection and data transmission.{" "}
+            </Text>
+          </View>
         )}
       </Layout>
     );

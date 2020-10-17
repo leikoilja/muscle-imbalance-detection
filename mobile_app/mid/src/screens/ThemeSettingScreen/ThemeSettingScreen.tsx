@@ -29,6 +29,7 @@ class ThemeSettingScreen extends React.Component {
   BackAction = () => (
     <TopNavigationAction icon={BackIcon} onPress={this.onBackPress} />
   );
+
   render() {
     const { theme } = this.props;
     const isDarkTheme = theme == "dark" ? true : false;

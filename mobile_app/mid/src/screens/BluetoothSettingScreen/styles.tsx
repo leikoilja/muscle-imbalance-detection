@@ -35,4 +35,13 @@ export default StyleSheet.create({
   dataTitle: {
     marginBottom: 10,
   },
+  settingNotSupportedContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  settingNotSupportedText: {
+    color: 'red',
+    textAlign: 'center',
+  },
 });

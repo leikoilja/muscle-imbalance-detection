@@ -14,4 +14,11 @@ export default StyleSheet.create({
     marginBottom: 20,
     marginHorizontal: 10,
   },
+  measurementsButtonContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'flex-end',
+    marginTop: 10,
+    marginRight: 20,
+  },
 });

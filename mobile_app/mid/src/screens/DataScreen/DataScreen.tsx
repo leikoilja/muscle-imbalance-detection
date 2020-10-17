@@ -1,23 +1,33 @@
 import * as React from "react";
 
-import { Dimensions } from "react-native";
-import { Button, Layout, Text, Divider } from "@ui-kitten/components";
+import { View, Dimensions } from "react-native";
+import { Icon, Button, Layout, Text, Divider } from "@ui-kitten/components";
 import styles from "./styles";
 import { connect } from "react-redux";
-import { logoutUser } from "../../state/user-auth/actions";
+import { logoutUser, saveMeasurement } from "../../state/user-auth/actions";
 import {
   saveBtDevice,
   updateDeviceIsConnected,
 } from "../../state/settings/actions";
 import BluetoothConnectedDataGraph from "../../components/BluetoothConnectedDataGraph";
 
-class HomeScreen extends React.Component {
+const ArchiveIcon = (props) => <Icon {...props} name="archive" />;
+
+class DataScreen extends React.Component {
   onLogout = async () => {
     const { logoutUser } = this.props;
     await logoutUser();
   };
 
-  onSettings = () => {
+  onMeasurementsPress = () => {
+    const { navigation } = this.props;
+    const { measurements } = this.props.auth;
+    navigation.navigate("MeasurementsScreen", {
+      measurements,
+    });
+  };
+
+  onSettingsPress = () => {
     const { navigation } = this.props;
     navigation.navigate("Settings", { screen: "BluetoothSettingScreen" });
   };
@@ -25,15 +35,26 @@ class HomeScreen extends React.Component {
   render() {
     const { user } = this.props.auth;
     const { device } = this.props.bt;
+    const { measurements } = this.props.auth;
 
     return (
       <Layout style={styles.container}>
-        <Text testID="welcome-text">Welcome, {user.fullName}!</Text>
-        {user.isDoctor && <Text testID="doctor-info">You are doctor!</Text>}
-        <Divider />
+        {measurements.length > 0 && (
+          <View style={styles.measurementsButtonContainer}>
+            <Button
+              status="info"
+              accessoryRight={ArchiveIcon}
+              onPress={this.onMeasurementsPress}
+            >
+              Measurements
+            </Button>
+          </View>
+        )}
         {device.address ? (
           <>
             <BluetoothConnectedDataGraph
+              userUid={user.user.uid}
+              saveMeasurement={this.props.saveMeasurement}
               device={this.props.bt.device}
               isConnected={this.props.bt.isConnected}
               onSaveBtDevice={this.props.saveBtDevice}
@@ -49,7 +70,7 @@ class HomeScreen extends React.Component {
             <Button
               testID="button-settings"
               style={{ width: "50%" }}
-              onPress={this.onSettings}
+              onPress={this.onSettingsPress}
             >
               Bluetooth Settings
             </Button>
@@ -69,6 +90,7 @@ const mapDispatchToProps = {
   logoutUser,
   updateDeviceIsConnected,
   saveBtDevice,
+  saveMeasurement,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(DataScreen);

@@ -14,6 +14,7 @@ import DataScreen from "../screens/DataScreen/DataScreen";
 import SettingsScreen from "../screens/SettingsScreen/SettingsScreen";
 import BluetoothSettingScreen from "../screens/BluetoothSettingScreen/BluetoothSettingScreen";
 import ThemeSettingScreen from "../screens/ThemeSettingScreen/ThemeSettingScreen";
+import MeasurementsScreen from "../screens/MeasurementsScreen/MeasurementsScreen";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 const DataStack = createStackNavigator<TabOneParamList>();
@@ -52,6 +53,10 @@ function TabOneNavigator({ navigation }) {
   return (
     <DataStack.Navigator>
       <DataStack.Screen name="DataScreen" component={DataScreen} />
+      <DataStack.Screen
+        name="MeasurementsScreen"
+        component={MeasurementsScreen}
+      />
     </DataStack.Navigator>
   );
 }
