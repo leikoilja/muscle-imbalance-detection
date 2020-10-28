@@ -146,12 +146,12 @@ android {
         }
     }
     signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
+        release {
+             storeFile file('android_key.keystore')
+             storePassword 'eplmmlsw'
+             keyAlias 'eplmmlsw'
+             keyPassword 'eplmmlsw'
+         }
     }
     buildTypes {
         debug {
