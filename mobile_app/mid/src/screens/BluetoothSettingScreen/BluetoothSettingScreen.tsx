@@ -48,19 +48,7 @@ export async function connectToDevice(
   }
 }
 
-const DeviceList = ({ devices, onPress, style, isConnecting }) => {
-  console.log("DeviceList.render()");
-  console.log(devices);
-
-  const LoadingIndicator = (props) => (
-    <>
-      {isConnecting && (
-        <View style={[props.style, styles.connectingSpinner]}>
-          <Spinner size="small" />
-        </View>
-      )}
-    </>
-  );
+const DeviceList = ({ devices, onPress }) => {
   return (
     <Layout style={styles.listContainer}>
       {devices.map((device, i) => {
@@ -69,7 +57,6 @@ const DeviceList = ({ devices, onPress, style, isConnecting }) => {
             style={styles.listElement}
             onPress={() => onPress(device)}
             status="basic"
-            accessoryRight={LoadingIndicator}
           >
             {device.name}(MAC: {device.address})
           </Button>
@@ -85,33 +72,81 @@ class ConnectionScreen extends React.Component {
     this.state = {
       text: undefined,
       scannedData: [],
+      frameAnimation: true,
     };
+    this.receivedData = [];
   }
 
   componentDidMount() {
-    this.onRead = RNBluetoothClassic.addListener(
+    const { navigation } = this.props;
+    this.onReadListener = RNBluetoothClassic.addListener(
       BTEvents.READ,
       this.handleRead,
       this
     );
+    this.onFocusListener = navigation.addListener("blur", () => {
+      this.props.disconnect();
+    });
+    //start animation
+    requestAnimationFrame(this._animation);
   }
 
   componentWillUnmount() {
-    this.onRead.remove();
-    RNBluetoothClassic.disconnect();
+    this.onReadListener.remove();
+    this.onFocusListener();
+    this.props.disconnect();
+    this.setState({ frameAnimation: false });
   }
 
-  handleRead = (data) => {
-    data.timestamp = new Date();
-    let scannedData = this.state.scannedData;
-    scannedData.unshift(data);
-    this.setState({ scannedData });
+  _animation = () => {
+    const N = 20; // Amount shown in the flatlist
+    let dataArray = [...this.receivedData];
+    if (dataArray.length > N) {
+      dataArray = dataArray.slice(Math.max(dataArray.length - N, 1));
+    }
+    this.setState({
+      scannedData: dataArray,
+    });
+    if (this.state.frameAnimation) {
+      requestAnimationFrame(this._animation);
+    }
   };
 
-  render() {
-    console.log("DeviceConnection.render()");
-    console.log(this.state);
+  handleRead = (data) => {
+    data.data = parseInt(data.data, 10) || 0;
+    this.receivedData.push(data);
+  };
 
+  onDisconnectPress = () => {
+    this.setState({ frameAnimation: false });
+    this.props.disconnect();
+  };
+
+  renderItem({ item }) {
+    return (
+      <Layout
+        id={item.timestamp}
+        style={{ flexDirection: "row", justifyContent: "flex-start" }}
+      >
+        <Text>{item.timestamp} - </Text>
+        <Text style={{ flexShrink: 1 }}>{item.data}</Text>
+      </Layout>
+    );
+  }
+
+  keyExtractor(item) {
+    return item.timestamp;
+  }
+
+  itemLayout(data, index) {
+    return {
+      length: 2,
+      offset: 2 * index,
+      index,
+    };
+  }
+
+  render() {
     return (
       <Layout style={styles.dataContainer}>
         <Text style={styles.dataTitle}>
@@ -119,25 +154,18 @@ class ConnectionScreen extends React.Component {
         </Text>
         <Layout style={styles.container}>
           <FlatList
-            style={{ flex: 1 }}
+            style={{ flex: 1, marginBottom: 5 }}
             contentContainerStyle={{ justifyContent: "flex-end" }}
             inverted
+            maxToRenderPerBatch={10}
+            getItemLayout={this.itemLayout}
             ref="scannedDataList"
-            data={this.state.scannedData}
-            keyExtractor={(item, index) => item.timestamp.toISOString()}
-            renderItem={({ item }) => (
-              <Layout
-                id={item.timestamp.toISOString()}
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
-                <Text>{item.timestamp.toTimeString().split(" ")[0]}</Text>
-                <Text>{item.type === "sent" ? " < " : " > "}</Text>
-                <Text style={{ flexShrink: 1 }}>{item.data.trim()}</Text>
-              </Layout>
-            )}
+            data={this.state.scannedData.reverse()}
+            keyExtractor={this.keyExtractor}
+            renderItem={this.renderItem}
           />
         </Layout>
-        <Button onPress={this.props.disconnect}>Disconnect</Button>
+        <Button onPress={this.onDisconnectPress}>Disconnect</Button>
       </Layout>
     );
   }
@@ -366,15 +394,15 @@ class BluetoothSetting extends React.Component {
                 device={this.state.connectedDevice}
                 scannedData={this.state.scannedData}
                 disconnect={this.unselectDevice}
+                navigation={this.props.navigation}
               />
             ) : (
               <Layout style={styles.container}>
                 <DeviceList
                   devices={this.state.deviceList}
                   onPress={this.selectDevice}
-                  isConnecting={this.state.isConnecting}
                 />
-                {this.state.isDiscovering && (
+                {(this.state.isDiscovering || this.state.isConnecting) && (
                   <Layout style={styles.discoverySpinner}>
                     <Spinner />
                   </Layout>

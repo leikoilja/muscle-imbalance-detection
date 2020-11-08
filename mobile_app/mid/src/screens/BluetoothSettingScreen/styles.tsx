@@ -13,7 +13,9 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  listElement: {},
+  listElement: {
+    marginBottom: 5,
+  },
   button: {
     width: '50%',
     textAlign: 'center',

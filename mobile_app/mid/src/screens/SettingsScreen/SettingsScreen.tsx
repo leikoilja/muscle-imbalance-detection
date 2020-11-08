@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 
 import {
   Button,
@@ -9,16 +9,16 @@ import {
   Divider,
   Menu,
   MenuItem,
-} from '@ui-kitten/components';
-import styles from './styles';
+} from "@ui-kitten/components";
+import styles from "./styles";
 
 export default function SettingsScreen({ navigation }) {
   const onBluetoothSettingPress = () => {
-    navigation.navigate('BluetoothSettingScreen');
+    navigation.navigate("BluetoothSettingScreen");
   };
 
   const onThemeSettingPress = () => {
-    navigation.navigate('ThemeSettingScreen');
+    navigation.navigate("ThemeSettingScreen");
   };
 
   return (

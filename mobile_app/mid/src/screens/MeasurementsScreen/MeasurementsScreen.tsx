@@ -26,10 +26,11 @@ import {
 const BackIcon = (props) => <Icon {...props} name="arrow-back" />;
 
 export default function MeasurementsScreen({ navigation, route }) {
-  const { measurements } = route.params;
-  const [isFetching, setIsFetching] = useState(true);
+  const { user, measurements } = route.params;
+  const [isFetching, setIsFetching] = useState(false);
   const [measurementsData, setMeasurementsData] = useState([]);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [visibleAnalyticsModal, setVisibleAnalyticsModal] = useState(false);
   const [modalTitle, setModalTitle] = useState();
   const [modalData, setModalData] = useState({
     labels: [],
@@ -39,6 +40,7 @@ export default function MeasurementsScreen({ navigation, route }) {
       },
     ],
   });
+  const [analyticsModalData, setAnalyticsModalData] = useState({});
 
   useEffect(() => {
     if (measurementsData.length > 0) {
@@ -46,6 +48,9 @@ export default function MeasurementsScreen({ navigation, route }) {
     }
     if (modalData.datasets[0].data.length > 0) {
       setVisibleModal(true);
+    }
+    if (analyticsModalData.length > 0) {
+      setVisibleAnalyticsModal(true);
     }
   });
 
@@ -76,7 +81,9 @@ export default function MeasurementsScreen({ navigation, route }) {
         setMeasurementsData(fetchedMeasurementsData);
       };
 
-      fetchMeasurements();
+      if (measurements.length > 0) {
+        fetchMeasurements();
+      }
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
@@ -92,46 +99,78 @@ export default function MeasurementsScreen({ navigation, route }) {
     <TopNavigationAction icon={BackIcon} onPress={onBackPress} />
   );
 
-  const onGraphPress = (measurements) => {
-    console.log("props", measurements);
-    let labels = [];
-    const dataPoints = [];
-    const fromData = unixTimestampToDate(measurements[0].unixTimestamp);
-    const toData = unixTimestampToDate(
-      measurements[measurements.length - 1].unixTimestamp
-    );
+  const onFetchArchiveRecords = async () => {
+    setIsFetching(true);
+    const fetchedMeasurementsData = [];
+    await firebase
+      .firestore()
+      .collection("measurements")
+      .where("userUid", "==", user.user.uid)
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          fetchedMeasurementsData.push({ ...data, uid: doc.id });
+        });
+      })
+      .catch((error) => {
+        console.error("Error reading document: ", error);
+        setIsFetching(false);
+      });
+
+    setMeasurementsData(fetchedMeasurementsData);
+  };
+
+  const onGraphPress = (measurements, visualRepresentation) => {
+    const fromData = measurements[0].timestamp;
+    const toData = measurements[measurements.length - 1].timestamp;
     const modalTitle = `From ${fromData} to ${toData}`;
-    for (const measurement of measurements) {
-      dataPoints.push(parseInt(measurement.value));
-      labels.push(unixTimestampToDateNoDate(measurement.unixTimestamp));
-    }
     setModalTitle(modalTitle);
-    // Hide labels if there are too many of them
-    if (labels.length > 10) {
-      labels = [];
-    }
     setModalData({
-      labels,
       datasets: [
         {
-          data: dataPoints,
+          data: visualRepresentation,
         },
       ],
     });
   };
 
+  const onAnalyticsPress = (analytics) => {
+    const modalTitle = "Analytics insights";
+    console.log("Analytics", analytics);
+    setModalTitle(modalTitle);
+    setAnalyticsModalData(analytics);
+  };
+
   const renderItemAccessory = (props, item) => (
-    <Button size="tiny" onPress={() => onGraphPress(item.measurements)}>
-      GRAPH
-    </Button>
+    <>
+      {item.analytics && (
+        <Button
+          status="success"
+          size="tiny"
+          onPress={() => onAnalyticsPress(item.analytics)}
+          style={{ marginRight: 5 }}
+        >
+          ANALYTICS
+        </Button>
+      )}
+      <Button
+        size="tiny"
+        onPress={() =>
+          onGraphPress(item.measurements, item.visualRepresentation)
+        }
+      >
+        GRAPH
+      </Button>
+    </>
   );
 
   const renderItemIcon = (props) => <Icon {...props} name="bar-chart" />;
 
   const renderItem = ({ item }) => {
-    const title = unixTimestampToDateNoSeconds(
-      item.measurements[0].unixTimestamp
-    );
+    const title = `From ${item.measurements[0].timestamp} to ${
+      item.measurements[item.measurements.length - 1].timestamp
+    }`;
     const description = `UID ${item.uid}`;
     return (
       <ListItem
@@ -158,6 +197,10 @@ export default function MeasurementsScreen({ navigation, route }) {
       ],
     });
     setVisibleModal(false);
+  };
+
+  const closeAnalyticsModal = () => {
+    setVisibleAnalyticsModal(false);
   };
 
   return (
@@ -189,8 +232,28 @@ export default function MeasurementsScreen({ navigation, route }) {
                 </Button>
               </Card>
             </Modal>
+            <Modal
+              visible={visibleAnalyticsModal}
+              backdropStyle={styles.backdrop}
+              onBackdropPress={closeAnalyticsModal}
+            >
+              <Card disabled>
+                <Text style={styles.modalTitle}>{modalTitle}</Text>
+                <Text>{analyticsModalData}</Text>
+                <Button
+                  style={styles.modalButton}
+                  onPress={closeAnalyticsModal}
+                >
+                  DISMISS
+                </Button>
+              </Card>
+            </Modal>
           </>
         )}
+
+        <Button style={styles.bottomButton} onPress={onFetchArchiveRecords}>
+          Reload
+        </Button>
       </View>
     </Layout>
   );

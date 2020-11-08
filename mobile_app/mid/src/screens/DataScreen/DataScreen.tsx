@@ -21,9 +21,10 @@ class DataScreen extends React.Component {
 
   onMeasurementsPress = () => {
     const { navigation } = this.props;
-    const { measurements } = this.props.auth;
+    const { user, measurements } = this.props.auth;
     navigation.navigate("MeasurementsScreen", {
       measurements,
+      user,
     });
   };
 
@@ -39,17 +40,15 @@ class DataScreen extends React.Component {
 
     return (
       <Layout style={styles.container}>
-        {measurements.length > 0 && (
-          <View style={styles.measurementsButtonContainer}>
-            <Button
-              status="info"
-              accessoryRight={ArchiveIcon}
-              onPress={this.onMeasurementsPress}
-            >
-              Measurements
-            </Button>
-          </View>
-        )}
+        <View style={styles.measurementsButtonContainer}>
+          <Button
+            status="info"
+            accessoryRight={ArchiveIcon}
+            onPress={this.onMeasurementsPress}
+          >
+            Measurements
+          </Button>
+        </View>
         {device.address ? (
           <>
             <BluetoothConnectedDataGraph

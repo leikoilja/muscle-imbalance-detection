@@ -8278,10 +8278,9 @@ react-native-appearance@~0.3.3:
     invariant "^2.2.4"
     use-subscription "^1.0.0"
 
-react-native-bluetooth-classic@^0.10.10:
+"react-native-bluetooth-classic@https://github.com/leikoilja/react-native-bluetooth-classic":
   version "0.10.10"
-  resolved "https://registry.yarnpkg.com/react-native-bluetooth-classic/-/react-native-bluetooth-classic-0.10.10.tgz#2ce4f0cf33bf846042a9d0f5500bb6e72c11b93c"
-  integrity sha512-kswKOFnNyVfXdqzIum0qhdS8SqLRgZYC5Sn2A378+1TehWdVx9XEXOl8GeE5JCJsLwp2TpIUhhbjQx2wXWoU6A==
+  resolved "https://github.com/leikoilja/react-native-bluetooth-classic#a45f1c8490351aac8f86f5b0eb19fb9393c106d0"
   dependencies:
     buffer "^5.4.3"
 

@@ -94,8 +94,10 @@ class BTDataGraph extends React.Component {
     super(props);
     this.state = {
       isRecording: false,
+      isUploading: false,
+      frameAnimation: true,
       recordedData: {
-        data: [],
+        dataToUpload: [],
         datasets: [
           {
             data: [],
@@ -105,81 +107,138 @@ class BTDataGraph extends React.Component {
       shownData: {
         datasets: [
           {
-            data: [0],
+            data: [],
           },
         ],
       },
     };
+    this.receivedData = [];
+    this.receivedRecordedData = [];
   }
 
   componentDidMount() {
-    this.onRead = RNBluetoothClassic.addListener(
+    this.onReadListener = RNBluetoothClassic.addListener(
       BTEvents.READ,
       this.handleRead,
       this
     );
+    //start animation
+    requestAnimationFrame(this._animation);
   }
 
   componentWillUnmount() {
-    this.onRead.remove();
+    this.onReadListener.remove();
     RNBluetoothClassic.disconnect();
+    this.setState({ frameAnimation: false });
   }
 
-  handleRead = (data) => {
+  updateGraphData = () => {
     // clone the data from the state
-    const dataClone = { ...this.state.shownData };
-    let timestamp = new Date();
-    data.timestamp = timestamp;
-    let dataArray = dataClone.datasets[0].data;
-    dataArray.push(parseInt(data.data, 10));
+    const shownDataClone = { ...this.state.shownData };
+    let receivedDataClone = [...this.receivedData];
 
-    if (this.state.isRecording) {
-      const recordedDataClone = { ...this.state.recordedData };
-      let recordedDataArray = recordedDataClone.datasets[0].data;
-      recordedDataArray.push(parseInt(data.data, 10));
-      recordedDataClone.datasets[0].data = recordedDataArray;
-      recordedDataClone.data.push({
-        unixTimestamp: Math.round(timestamp.getTime() / 1000),
-        value: data.data,
-      });
-      this.setState({
-        recordedData: recordedDataClone,
-      });
+    // Moving average approach:
+    // Since this method is called each frame - calculate the average of the
+    // last 16 measurement recordings
+    let N = 16;
+    if (receivedDataClone.length > N) {
+      receivedDataClone = receivedDataClone.slice(
+        Math.max(receivedDataClone.length - N, 1)
+      );
     }
+    let receivedDataSum = 0;
+    let receivedDataAvg;
+    for (const element of receivedDataClone) {
+      receivedDataSum += element.data;
+    }
+    receivedDataAvg = receivedDataSum / receivedDataClone.length || 0;
+
+    let shownDataArray = shownDataClone.datasets[0].data;
+    shownDataArray.push(receivedDataAvg);
 
     // Limit the array of shownData to N values
-    const N = 20;
-    if (dataArray.length > N) {
-      dataArray = dataArray.slice(Math.max(dataArray.length - N, 1));
+    N = 20;
+    if (shownDataArray.length > N) {
+      shownDataArray = shownDataArray.slice(
+        Math.max(shownDataArray.length - N, 1)
+      );
     }
-    dataClone.datasets[0].data = dataArray;
-
+    shownDataClone.datasets[0].data = shownDataArray;
     this.setState({
-      shownData: dataClone,
+      shownData: shownDataClone,
     });
   };
 
+  handleRecordedData = () => {
+    /**
+     * Function that saves all incoming data points unchanged, but
+     * since there are too much data to represent on the graph screen it also
+     * splits that big data set into set amount of chunks and then calculates
+     * average per each chunk for better representation on the screen.
+     */
+    const recordedDataClone = { ...this.state.recordedData };
+    recordedDataClone.dataToUpload = [...this.receivedRecordedData];
+
+    // Split array into set amount of chunks
+    const splitArrayToChunks = (array, parts = 40) => {
+      let result = [];
+      for (let i = parts; i > 0; i--) {
+        result.push(array.splice(0, Math.ceil(array.length / i)));
+      }
+      return result;
+    };
+    const dataChunks = splitArrayToChunks(this.receivedRecordedData);
+
+    // Calculate average per each chunk
+    const sumReducer = (accumulator, item) => {
+      return accumulator + item.data;
+    };
+    const avg = dataChunks.map(
+      (chunk) => chunk.reduce(sumReducer, 0) / chunk.length
+    );
+    recordedDataClone.datasets[0].data = avg;
+    this.setState({
+      recordedData: recordedDataClone,
+    });
+  };
+
+  _animation = () => {
+    this.updateGraphData();
+    if (this.state.frameAnimation) {
+      requestAnimationFrame(this._animation);
+    }
+  };
+
+  handleRead = (data) => {
+    data.data = parseInt(data.data, 10) || 0;
+    this.receivedData.push(data);
+    if (this.state.isRecording) {
+      this.receivedRecordedData.push(data);
+    }
+  };
+
   onRecordPress = () => {
-    console.log("started recording");
     this.setState({
       isRecording: true,
     });
   };
 
   onStopRecordPress = () => {
-    console.log("stopped recording");
     this.setState({
       isRecording: false,
     });
+    this.handleRecordedData();
   };
 
   onUploadPress = async () => {
     const { userUid } = this.props;
     const document = {
       userUid: userUid,
-      measurements: this.state.recordedData.data,
+      measurements: this.state.recordedData.dataToUpload,
+      visualRepresentation: this.state.recordedData.datasets[0].data,
     };
     let measurementUid;
+    this.setState({ isUploading: true });
     await firebase
       .firestore()
       .collection("measurements")
@@ -198,10 +257,11 @@ class BTDataGraph extends React.Component {
   };
 
   onCancelPress = () => {
-    console.log("cancel pressed");
+    this.receivedRecordedData = [];
+    this.setState({ isUploading: false });
     this.setState({
       recordedData: {
-        data: [],
+        dataToUpload: [],
         datasets: [
           {
             data: [],
@@ -212,6 +272,14 @@ class BTDataGraph extends React.Component {
     });
   };
 
+  uploadButtonIcon = (props) => {
+    return this.state.isUploading ? (
+      <Spinner size="small" />
+    ) : (
+      UploadIcon(props)
+    );
+  };
+
   render() {
     const hasRecordedData = this.state.recordedData.datasets[0].data.length
       ? true
@@ -219,7 +287,8 @@ class BTDataGraph extends React.Component {
     const dataToShow = hasRecordedData
       ? this.state.recordedData
       : this.state.shownData;
-    const descText = hasRecordedData ? "Recorded data" : "Real-time data";
+    let descText = "Moving average of 1kHz ";
+    descText += hasRecordedData ? "recorded data" : "real-time data";
     return (
       <Layout>
         <Text style={styles.descText}>{descText}</Text>
@@ -242,7 +311,7 @@ class BTDataGraph extends React.Component {
                     style={styles.button}
                     status="success"
                     onPress={this.onUploadPress}
-                    accessoryRight={UploadIcon}
+                    accessoryRight={this.uploadButtonIcon}
                   >
                     Upload recorded data
                   </Button>
@@ -291,7 +360,6 @@ const styles = StyleSheet.create({
     color: "red",
   },
   graph: {
-    // margin: 10,
     borderRadius: 10,
   },
   actionButtons: {
