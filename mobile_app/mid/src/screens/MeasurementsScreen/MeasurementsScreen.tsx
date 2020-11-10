@@ -17,11 +17,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import OrangeLineChart from "../../components/OrangeLineChart";
-import {
-  unixTimestampToDate,
-  unixTimestampToDateNoSeconds,
-  unixTimestampToDateNoDate,
-} from "../../utils/unixTimeToDate";
+import { ISOtimestampToString } from "../../utils/time_utils";
 
 const BackIcon = (props) => <Icon {...props} name="arrow-back" />;
 
@@ -40,7 +36,7 @@ export default function MeasurementsScreen({ navigation, route }) {
       },
     ],
   });
-  const [analyticsModalData, setAnalyticsModalData] = useState({});
+  const [analyticsModalData, setAnalyticsModalData] = useState([]);
 
   useEffect(() => {
     if (measurementsData.length > 0) {
@@ -59,7 +55,7 @@ export default function MeasurementsScreen({ navigation, route }) {
       const fetchMeasurements = async () => {
         console.log("Fetching MEASUREMENTS on focus", measurements);
         setIsFetching(true);
-        const fetchedMeasurementsData = [];
+        let fetchedMeasurementsData = [];
         for (const measurementUid of measurements) {
           await firebase
             .firestore()
@@ -122,9 +118,11 @@ export default function MeasurementsScreen({ navigation, route }) {
   };
 
   const onGraphPress = (measurements, visualRepresentation) => {
-    const fromData = measurements[0].timestamp;
-    const toData = measurements[measurements.length - 1].timestamp;
-    const modalTitle = `From ${fromData} to ${toData}`;
+    const fromDataISO = measurements[0].timestamp;
+    const untilDataISO = measurements[measurements.length - 1].timestamp;
+    const fromData = ISOtimestampToString(fromDataISO);
+    const untilData = ISOtimestampToString(untilDataISO);
+    const modalTitle = `From ${fromData} to ${untilData}`;
     setModalTitle(modalTitle);
     setModalData({
       datasets: [
@@ -137,19 +135,24 @@ export default function MeasurementsScreen({ navigation, route }) {
 
   const onAnalyticsPress = (analytics) => {
     const modalTitle = "Analytics insights";
-    console.log("Analytics", analytics);
+    const fetchedAnalyticsData = [];
+    for (const analytic of analytics) {
+      const key = Object.keys(analytic)[0];
+      fetchedAnalyticsData.push({ key: key, value: analytic[key] });
+    }
+    console.log("Analytics", fetchedAnalyticsData);
     setModalTitle(modalTitle);
-    setAnalyticsModalData(analytics);
+    setAnalyticsModalData(fetchedAnalyticsData);
   };
 
   const renderItemAccessory = (props, item) => (
-    <>
+    <View style={styles.buttonGroup}>
       {item.analytics && (
         <Button
           status="success"
           size="tiny"
           onPress={() => onAnalyticsPress(item.analytics)}
-          style={{ marginRight: 5 }}
+          style={styles.button}
         >
           ANALYTICS
         </Button>
@@ -159,18 +162,24 @@ export default function MeasurementsScreen({ navigation, route }) {
         onPress={() =>
           onGraphPress(item.measurements, item.visualRepresentation)
         }
+        style={styles.button}
       >
         GRAPH
       </Button>
-    </>
+    </View>
   );
+
+  const renderAnalyticsItemAccessory = (props, value) => <Text>{value}</Text>;
 
   const renderItemIcon = (props) => <Icon {...props} name="bar-chart" />;
 
   const renderItem = ({ item }) => {
-    const title = `From ${item.measurements[0].timestamp} to ${
-      item.measurements[item.measurements.length - 1].timestamp
-    }`;
+    const fromDataISO = item.measurements[0].timestamp;
+    const untilDataISO =
+      item.measurements[item.measurements.length - 1].timestamp;
+    const fromData = ISOtimestampToString(fromDataISO);
+    const untilData = ISOtimestampToString(untilDataISO);
+    const title = `From ${fromData} to ${untilData}`;
     const description = `UID ${item.uid}`;
     return (
       <ListItem
@@ -182,10 +191,19 @@ export default function MeasurementsScreen({ navigation, route }) {
     );
   };
 
-  const data = new Array(8).fill({
-    title: "Title for Item",
-    description: "Description for Item",
-  });
+  const renderAnalyticsItem = ({ item }) => {
+    const title = item.key;
+
+    return (
+      <ListItem
+        title={title}
+        // description={description}
+        accessoryRight={(props) =>
+          renderAnalyticsItemAccessory(props, item.value)
+        }
+      />
+    );
+  };
 
   const closeModal = () => {
     setModalData({
@@ -201,6 +219,7 @@ export default function MeasurementsScreen({ navigation, route }) {
 
   const closeAnalyticsModal = () => {
     setVisibleAnalyticsModal(false);
+    setAnalyticsModalData([]);
   };
 
   return (
@@ -234,12 +253,16 @@ export default function MeasurementsScreen({ navigation, route }) {
             </Modal>
             <Modal
               visible={visibleAnalyticsModal}
+              style={styles.analyticModal}
               backdropStyle={styles.backdrop}
               onBackdropPress={closeAnalyticsModal}
             >
               <Card disabled>
                 <Text style={styles.modalTitle}>{modalTitle}</Text>
-                <Text>{analyticsModalData}</Text>
+                <List
+                  data={analyticsModalData}
+                  renderItem={renderAnalyticsItem}
+                />
                 <Button
                   style={styles.modalButton}
                   onPress={closeAnalyticsModal}

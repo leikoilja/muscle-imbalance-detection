@@ -19,6 +19,13 @@
     ],
     "rules": {
 	  "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-"quotes": [2, "double", { "avoidEscape": true }]
+"quotes": [2, "double", { "avoidEscape": true }],
+    "comma-dangle": ["error", {
+        "arrays": "always",
+        "objects": "always",
+        "imports": "always",
+        "exports": "always",
+        "functions": "never"
+    }]
     }
 }
