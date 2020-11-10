@@ -33,7 +33,7 @@
     "expo-linking": "^1.0.1",
     "expo-splash-screen": "~0.3.1",
     "expo-status-bar": "^1.0.2",
-    "expo-updates": "~0.2.10",
+    "expo-updates": "~0.3.5",
     "expo-web-browser": "~8.3.1",
     "firebase": "^7.20.0",
     "moment": "^2.29.1",
