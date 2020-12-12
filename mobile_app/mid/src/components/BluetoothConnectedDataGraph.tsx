@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import {
-  Layout,
-  Text,
-  Icon,
-  Spinner,
-  ButtonGroup,
-  Button,
-} from "@ui-kitten/components";
+import { View, StyleSheet } from "react-native";
+import { Layout, Text, Icon, Spinner, Button } from "@ui-kitten/components";
 import RNBluetoothClassic, { BTEvents } from "react-native-bluetooth-classic";
 import { useFocusEffect } from "@react-navigation/native";
 import { connectToDevice } from "../screens/BluetoothSettingScreen/BluetoothSettingScreen";
+import Toast from "react-native-toast-message";
 import { firebase } from "../firebase/config";
-import OrangeLineChart from "./OrangeLineChart";
+import OrangeLineChart, {
+  blueLineColor,
+  greenLineColor,
+} from "./OrangeLineChart";
+import { deepCopy } from "../utils/copy_utils";
 
 const PlayIcon = (props) => <Icon {...props} name="play-circle" />;
 const PauseIcon = (props) => <Icon {...props} name="pause-circle" />;
@@ -92,25 +90,33 @@ export default function BluetoothConnectedDataGraph({
 class BTDataGraph extends React.Component {
   constructor(props) {
     super(props);
+    const sensorOneInitChartData = {
+      data: [],
+      color: blueLineColor,
+    };
+    const sensorTwoInitChartData = {
+      data: [],
+      color: greenLineColor,
+    };
+    this.initChartData = {
+      datasets: [sensorOneInitChartData, sensorTwoInitChartData],
+    };
+    let chartData = deepCopy(this.initChartData);
+    const initRecordedData = {
+      dataToUpload: [],
+      ...chartData,
+    };
+    chartData = deepCopy(this.initChartData);
+    const initShownData = {
+      dataToUpload: [],
+      ...chartData,
+    };
     this.state = {
       isRecording: false,
       isUploading: false,
       frameAnimation: true,
-      recordedData: {
-        dataToUpload: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
-      shownData: {
-        datasets: [
-          {
-            data: [],
-          },
-        ],
-      },
+      recordedData: initRecordedData,
+      shownData: initShownData,
     };
     this.receivedData = [];
     this.receivedRecordedData = [];
@@ -146,24 +152,35 @@ class BTDataGraph extends React.Component {
         Math.max(receivedDataClone.length - N, 1)
       );
     }
-    let receivedDataSum = 0;
-    let receivedDataAvg;
+    let receivedDataSum1 = 0;
+    let receivedDataSum2 = 0;
+    let receivedDataAvg1;
+    let receivedDataAvg2;
     for (const element of receivedDataClone) {
-      receivedDataSum += element.data;
+      receivedDataSum1 += element.sensorOne;
+      receivedDataSum2 += element.sensorTwo;
     }
-    receivedDataAvg = receivedDataSum / receivedDataClone.length || 0;
+    receivedDataAvg1 = receivedDataSum1 / receivedDataClone.length || 0;
+    receivedDataAvg2 = receivedDataSum2 / receivedDataClone.length || 0;
 
-    let shownDataArray = shownDataClone.datasets[0].data;
-    shownDataArray.push(receivedDataAvg);
+    let shownDataArray1 = shownDataClone.datasets[0].data;
+    let shownDataArray2 = shownDataClone.datasets[1].data;
+
+    shownDataArray1.push(receivedDataAvg1);
+    shownDataArray2.push(receivedDataAvg2);
 
     // Limit the array of shownData to N values
-    N = 20;
-    if (shownDataArray.length > N) {
-      shownDataArray = shownDataArray.slice(
-        Math.max(shownDataArray.length - N, 1)
+    N = 70;
+    if (shownDataArray1.length > N) {
+      shownDataArray1 = shownDataArray1.slice(
+        Math.max(shownDataArray1.length - N, 1)
+      );
+      shownDataArray2 = shownDataArray2.slice(
+        Math.max(shownDataArray2.length - N, 1)
       );
     }
-    shownDataClone.datasets[0].data = shownDataArray;
+    shownDataClone.datasets[0].data = shownDataArray1;
+    shownDataClone.datasets[1].data = shownDataArray2;
     this.setState({
       shownData: shownDataClone,
     });
@@ -190,13 +207,21 @@ class BTDataGraph extends React.Component {
     const dataChunks = splitArrayToChunks(this.receivedRecordedData);
 
     // Calculate average per each chunk
-    const sumReducer = (accumulator, item) => {
-      return accumulator + item.data;
+    const sumReducer1 = (accumulator, item) => {
+      return accumulator + item.sensorOne;
     };
-    const avg = dataChunks.map(
-      (chunk) => chunk.reduce(sumReducer, 0) / chunk.length
+    const avg1 = dataChunks.map(
+      (chunk) => chunk.reduce(sumReducer1, 0) / chunk.length
     );
-    recordedDataClone.datasets[0].data = avg;
+    recordedDataClone.datasets[0].data = avg1;
+    const sumReducer2 = (accumulator, item) => {
+      return accumulator + item.sensorTwo;
+    };
+    const avg2 = dataChunks.map(
+      (chunk) => chunk.reduce(sumReducer2, 0) / chunk.length
+    );
+    recordedDataClone.datasets[1].data = avg2;
+
     this.setState({
       recordedData: recordedDataClone,
     });
@@ -210,7 +235,14 @@ class BTDataGraph extends React.Component {
   };
 
   handleRead = (data) => {
+    // Split monolithe data into two sensor values
+    // The incoming data must always be 6 digits with first 3 digits being
+    // values of first electrode sensors and last 3 for the second sensor
+    // correspondingly
     data.data = parseInt(data.data, 10) || 0;
+    const dataStr = data.data;
+    data.sensorOne = Math.floor(dataStr / 1000);
+    data.sensorTwo = dataStr % 1000;
     this.receivedData.push(data);
     if (this.state.isRecording) {
       this.receivedRecordedData.push(data);
@@ -235,7 +267,8 @@ class BTDataGraph extends React.Component {
     const document = {
       userUid: userUid,
       measurements: this.state.recordedData.dataToUpload,
-      visualRepresentation: this.state.recordedData.datasets[0].data,
+      visualRepresentationSensorOne: this.state.recordedData.datasets[0].data,
+      visualRepresentationSensorTwo: this.state.recordedData.datasets[1].data,
     };
     let measurementUid;
     this.setState({ isUploading: true });
@@ -252,22 +285,25 @@ class BTDataGraph extends React.Component {
       });
     if (measurementUid) {
       this.props.saveMeasurement(measurementUid);
+      Toast.show({
+        text1: "Success!",
+        text2: `Your measurements are successfully uploaded under the UID ${measurementUid}`,
+        visibilityTime: 3000,
+        autoHide: true,
+      });
     }
     this.onCancelPress();
   };
 
   onCancelPress = () => {
+    let chartData = deepCopy(this.initChartData);
     this.receivedRecordedData = [];
-    this.setState({ isUploading: false });
     this.setState({
       recordedData: {
         dataToUpload: [],
-        datasets: [
-          {
-            data: [],
-          },
-        ],
+        ...chartData,
       },
+      isUploading: false,
       isRecording: false,
     });
   };

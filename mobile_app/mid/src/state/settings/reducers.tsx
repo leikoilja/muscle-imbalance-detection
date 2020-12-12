@@ -1,11 +1,11 @@
-import { SETTINGS_ACTION_TYPES } from './actions';
+import { SETTINGS_ACTION_TYPES } from "./actions";
 
 const initialState = {
   bt: {
     device: {},
     isConnected: false,
   },
-  theme: 'light',
+  theme: "light",
 };
 
 export const settingsReducer = (state = initialState, action) => {
@@ -15,6 +15,11 @@ export const settingsReducer = (state = initialState, action) => {
       return {
         ...state,
         bt: { ...state.bt, device },
+      };
+    case SETTINGS_ACTION_TYPES.BT_REMOVE_DEVICE:
+      return {
+        ...state,
+        bt: initialState.bt,
       };
     case SETTINGS_ACTION_TYPES.BT_UPDATE_DEVICE_STATE:
       const { isConnected } = action;

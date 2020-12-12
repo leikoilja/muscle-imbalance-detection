@@ -49,8 +49,8 @@ class DataScreen extends React.Component {
             Measurements
           </Button>
         </View>
-        {device.address ? (
-          <>
+        <View style={styles.container}>
+          {device.address ? (
             <BluetoothConnectedDataGraph
               userUid={user.user.uid}
               saveMeasurement={this.props.saveMeasurement}
@@ -59,22 +59,18 @@ class DataScreen extends React.Component {
               onSaveBtDevice={this.props.saveBtDevice}
               onUpdateDeviceIsConnected={this.props.updateDeviceIsConnected}
             />
-          </>
-        ) : (
-          <>
-            <Text style={styles.descText}>
-              Looks like you have no Bluetooth module setup yet, please go to
-              'Settings' to do so!
-            </Text>
-            <Button
-              testID="button-settings"
-              style={{ width: "50%" }}
-              onPress={this.onSettingsPress}
-            >
-              Bluetooth Settings
-            </Button>
-          </>
-        )}
+          ) : (
+            <>
+              <Text style={styles.descText}>
+                Looks like you have no Bluetooth module setup yet, please go to
+                'Settings' to do so!
+              </Text>
+              <Button testID="button-settings" onPress={this.onSettingsPress}>
+                Bluetooth Settings
+              </Button>
+            </>
+          )}
+        </View>
       </Layout>
     );
   }

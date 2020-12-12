@@ -2,10 +2,17 @@ import { StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import { LineChart } from "react-native-chart-kit";
 
+export const blueLineColor = (opacity = 1) => `rgba(19, 85, 107, ${opacity})`;
+export const greenLineColor = (opacity = 1) =>
+  `rgba(104, 155, 171, ${opacity})`;
+
 export default function OrangeLineChart({ data }) {
   if (data.datasets[0].data.length == 0) {
     data = {
       datasets: [
+        {
+          data: [0],
+        },
         {
           data: [0],
         },

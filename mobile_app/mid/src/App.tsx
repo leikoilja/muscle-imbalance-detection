@@ -6,6 +6,7 @@ import { ApplicationProvider, IconRegistry, Text } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { StyleSheet, SafeAreaView, View } from "react-native";
 import { connect } from "react-redux";
+import SplashScreen from "react-native-splash-screen";
 import NetInfo from "@react-native-community/netinfo";
 import RootNavigator from "./navigation/RootNavigator";
 
@@ -16,6 +17,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this._subscription = NetInfo.addEventListener(this._handleIsConnected);
+    SplashScreen.hide();
   }
 
   componentWillUnmount() {
@@ -32,7 +34,6 @@ class App extends React.Component {
     const { theme } = this.props;
     return (
       <ApplicationProvider {...eva} theme={eva[theme]}>
-        <Toast ref={(ref) => Toast.setRef(ref)} />
         <IconRegistry icons={EvaIconsPack} />
         <SafeAreaView style={styles.container}>
           {this.state.isConnected ? (
@@ -45,6 +46,7 @@ class App extends React.Component {
               </Text>
             </View>
           )}
+          <Toast ref={(ref) => Toast.setRef(ref)} />
         </SafeAreaView>
       </ApplicationProvider>
     );

@@ -1,15 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  clearBtButton: {},
   listContainer: {
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
   box: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   profileImage: {
     marginVertical: 20,

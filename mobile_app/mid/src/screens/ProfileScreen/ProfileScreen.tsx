@@ -1,18 +1,21 @@
 import * as React from "react";
 
 import {
-  Text,
   Layout,
   Divider,
   Button,
   Avatar,
   List,
   ListItem,
+  Icon,
 } from "@ui-kitten/components";
 import { logoutUser } from "../../state/user-auth/actions";
+import { removeBtDevice } from "../../state/settings/actions";
 import styles from "./styles";
 import { connect } from "react-redux";
 import { Image, View } from "react-native";
+
+const RemoveIcon = (props) => <Icon {...props} name="close-outline" />;
 
 class ProfileScreen extends React.Component {
   onLogout = async () => {
@@ -20,8 +23,23 @@ class ProfileScreen extends React.Component {
     await logoutUser();
   };
 
+  renderClearBtButonAccessory = (props) => (
+    <Button
+      style={styles.clearBtButton}
+      accessoryLeft={RemoveIcon}
+      onPress={this.props.removeBtDevice}
+      size="small"
+    >
+      Clear
+    </Button>
+  );
+
   renderItem = ({ item, index }) => (
-    <ListItem title={item.value} description={item.title} />
+    <ListItem
+      title={item.value}
+      description={item.title}
+      accessoryRight={item.accessoryRight}
+    />
   );
 
   render() {
@@ -46,6 +64,7 @@ class ProfileScreen extends React.Component {
       {
         title: "Last paired BT device",
         value: device.name ? `${device.name}(${device.address})` : "None",
+        accessoryRight: device.name ? this.renderClearBtButonAccessory : null,
       },
     ];
     return (
@@ -82,6 +101,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   logoutUser,
+  removeBtDevice,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

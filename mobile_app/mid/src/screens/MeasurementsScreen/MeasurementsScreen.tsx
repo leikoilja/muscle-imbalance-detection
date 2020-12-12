@@ -16,7 +16,10 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import OrangeLineChart from "../../components/OrangeLineChart";
+import OrangeLineChart, {
+  blueLineColor,
+  greenLineColor,
+} from "../../components/OrangeLineChart";
 import { ISOtimestampToString } from "../../utils/time_utils";
 
 const BackIcon = (props) => <Icon {...props} name="arrow-back" />;
@@ -31,6 +34,9 @@ export default function MeasurementsScreen({ navigation, route }) {
   const [modalData, setModalData] = useState({
     labels: [],
     datasets: [
+      {
+        data: [],
+      },
       {
         data: [],
       },
@@ -117,7 +123,11 @@ export default function MeasurementsScreen({ navigation, route }) {
     setMeasurementsData(fetchedMeasurementsData);
   };
 
-  const onGraphPress = (measurements, visualRepresentation) => {
+  const onGraphPress = (
+    measurements,
+    visualRepresentationSensorOne,
+    visualRepresentationSensorTwo
+  ) => {
     const fromDataISO = measurements[0].timestamp;
     const untilDataISO = measurements[measurements.length - 1].timestamp;
     const fromData = ISOtimestampToString(fromDataISO);
@@ -127,7 +137,12 @@ export default function MeasurementsScreen({ navigation, route }) {
     setModalData({
       datasets: [
         {
-          data: visualRepresentation,
+          data: visualRepresentationSensorOne,
+          color: blueLineColor,
+        },
+        {
+          data: visualRepresentationSensorTwo,
+          color: greenLineColor,
         },
       ],
     });
@@ -160,7 +175,11 @@ export default function MeasurementsScreen({ navigation, route }) {
       <Button
         size="tiny"
         onPress={() =>
-          onGraphPress(item.measurements, item.visualRepresentation)
+          onGraphPress(
+            item.measurements,
+            item.visualRepresentationSensorOne,
+            item.visualRepresentationSensorTwo
+          )
         }
         style={styles.button}
       >

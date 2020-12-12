@@ -244,7 +244,7 @@ class BluetoothSetting extends React.Component {
 
   onConnectionLost(error) {
     Toast.show({
-      text1: "Los connection",
+      text1: "Lost connection",
       text2: `Connection to ${error.device.name} was lost`,
       visibilityTime: 3000,
       autoHide: true,
@@ -264,7 +264,7 @@ class BluetoothSetting extends React.Component {
 
   onBackPress = () => {
     const { navigation } = this.props;
-    navigation.goBack();
+    navigation.navigate("Settings", { screen: "SettingsScreen" });
   };
 
   BackAction = () => (

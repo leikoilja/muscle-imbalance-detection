@@ -9,9 +9,7 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
-import expo.modules.splashscreen.SplashScreen;
-import expo.modules.splashscreen.SplashScreenImageResizeMode;
-
+import org.devio.rn.splashscreen.SplashScreen;
 
 public class MainActivity extends ReactActivity {
 
@@ -26,10 +24,8 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    SplashScreen.show(this);
     super.onCreate(savedInstanceState);
-    // SplashScreen.show(...) has to be called after super.onCreate(...)
-    // Below line is handled by '@expo/configure-splash-screen' command and it's discouraged to modify it manually
-    SplashScreen.show(this, SplashScreenImageResizeMode.CONTAIN, false);
   }
 
 
