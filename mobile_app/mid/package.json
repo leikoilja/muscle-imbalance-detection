@@ -27,7 +27,7 @@
     "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "expo": "~38.0.8",
-    "expo-asset": "~8.1.7",
+    "expo-asset": "~8.2.1",
     "expo-constants": "~9.2.0",
     "expo-font": "~8.3.0",
     "expo-linking": "^1.0.1",
