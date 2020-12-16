@@ -28,6 +28,7 @@ export enum USER_AUTH_ACTION_TYPES {
   REGISTRATION_FINISHED = "USER_AUTH/REGISTRATION_FINISHED",
   REGISTRATION_ERROR = "USER_AUTH/REGISTRATION_ERROR",
   SAVE_MEASUREMENT = "USER/SAVE_MEASUREMENT",
+  REMOVE_ALL_MEASUREMENTS = "USER/REMOVE_ALL_MEASUREMENTS",
 }
 
 // Login
@@ -82,6 +83,9 @@ export const saveMeasurement = (measurementUid: string) => ({
   measurementUid,
 });
 
+export const removeAllMeasurements = () => ({
+  type: USER_AUTH_ACTION_TYPES.REMOVE_ALL_MEASUREMENTS,
+});
 //
 // Action creators
 //

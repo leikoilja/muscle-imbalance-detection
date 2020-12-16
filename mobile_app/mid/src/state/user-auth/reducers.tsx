@@ -96,6 +96,13 @@ export const userAuth = (
         measurements,
       };
     }
+    case USER_AUTH_ACTION_TYPES.REMOVE_ALL_MEASUREMENTS: {
+      const measurements = [];
+      return {
+        ...state,
+        measurements,
+      };
+    }
     default:
       return state;
   }

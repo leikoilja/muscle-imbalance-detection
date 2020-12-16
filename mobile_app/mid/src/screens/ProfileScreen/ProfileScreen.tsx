@@ -9,7 +9,10 @@ import {
   ListItem,
   Icon,
 } from "@ui-kitten/components";
-import { logoutUser } from "../../state/user-auth/actions";
+import {
+  logoutUser,
+  removeAllMeasurements,
+} from "../../state/user-auth/actions";
 import { removeBtDevice } from "../../state/settings/actions";
 import styles from "./styles";
 import { connect } from "react-redux";
@@ -23,7 +26,18 @@ class ProfileScreen extends React.Component {
     await logoutUser();
   };
 
-  renderClearBtButonAccessory = (props) => (
+  renderClearMeasurementsButtonAccessory = (props) => (
+    <Button
+      style={styles.clearBtButton}
+      accessoryLeft={RemoveIcon}
+      onPress={this.props.removeAllMeasurements}
+      size="small"
+    >
+      Clear all
+    </Button>
+  );
+
+  renderClearBtButtonAccessory = (props) => (
     <Button
       style={styles.clearBtButton}
       accessoryLeft={RemoveIcon}
@@ -43,7 +57,7 @@ class ProfileScreen extends React.Component {
   );
 
   render() {
-    const { user, device } = this.props;
+    const { user, device, measurements } = this.props;
     const data = [
       {
         title: "Full Name",
@@ -62,9 +76,16 @@ class ProfileScreen extends React.Component {
         value: user.user.uid,
       },
       {
+        title: "User saved measurements",
+        value: measurements[0] ? `${measurements.length}` : "None",
+        accessoryRight: measurements[0]
+          ? this.renderClearMeasurementsButtonAccessory
+          : null,
+      },
+      {
         title: "Last paired BT device",
         value: device.name ? `${device.name}(${device.address})` : "None",
-        accessoryRight: device.name ? this.renderClearBtButonAccessory : null,
+        accessoryRight: device.name ? this.renderClearBtButtonAccessory : null,
       },
     ];
     return (
@@ -97,11 +118,13 @@ class ProfileScreen extends React.Component {
 const mapStateToProps = (state) => ({
   user: state.userAuth.user,
   device: state.settingsReducer.bt.device,
+  measurements: state.userAuth.measurements,
 });
 
 const mapDispatchToProps = {
   logoutUser,
   removeBtDevice,
+  removeAllMeasurements,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

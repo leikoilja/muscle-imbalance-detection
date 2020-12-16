@@ -16,6 +16,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import Toast from "react-native-toast-message";
 import OrangeLineChart, {
   blueLineColor,
   greenLineColor,
@@ -149,7 +150,7 @@ export default function MeasurementsScreen({ navigation, route }) {
   };
 
   const onAnalyticsPress = (analytics) => {
-    const modalTitle = "Analytics insights";
+    const modalTitle = "Analytics Insights";
     const fetchedAnalyticsData = [];
     for (const analytic of analytics) {
       const key = Object.keys(analytic)[0];
@@ -162,11 +163,11 @@ export default function MeasurementsScreen({ navigation, route }) {
 
   const renderItemAccessory = (props, item) => (
     <View style={styles.buttonGroup}>
-      {item.analytics && (
+      {item.Analytics && (
         <Button
           status="success"
           size="tiny"
-          onPress={() => onAnalyticsPress(item.analytics)}
+          onPress={() => onAnalyticsPress(item.Analytics)}
           style={styles.button}
         >
           ANALYTICS
@@ -193,21 +194,40 @@ export default function MeasurementsScreen({ navigation, route }) {
   const renderItemIcon = (props) => <Icon {...props} name="bar-chart" />;
 
   const renderItem = ({ item }) => {
-    const fromDataISO = item.measurements[0].timestamp;
-    const untilDataISO =
-      item.measurements[item.measurements.length - 1].timestamp;
-    const fromData = ISOtimestampToString(fromDataISO);
-    const untilData = ISOtimestampToString(untilDataISO);
-    const title = `From ${fromData} to ${untilData}`;
-    const description = `UID ${item.uid}`;
-    return (
-      <ListItem
-        title={title}
-        description={description}
-        accessoryLeft={renderItemIcon}
-        accessoryRight={(props) => renderItemAccessory(props, item)}
-      />
-    );
+    try {
+      const fromDataISO = item.measurements[0].timestamp;
+      const untilDataISO =
+        item.measurements[item.measurements.length - 1].timestamp;
+      const fromData = ISOtimestampToString(fromDataISO);
+      const untilData = ISOtimestampToString(untilDataISO);
+      const title = `From ${fromData} to ${untilData}`;
+      const description = `UID ${item.uid}`;
+      return (
+        <ListItem
+          title={title}
+          description={description}
+          accessoryLeft={renderItemIcon}
+          accessoryRight={(props) => renderItemAccessory(props, item)}
+        />
+      );
+    } catch (error) {
+      console.log(item);
+      console.error(
+        "Failed loading measurement's data for item: " +
+          item +
+          " with error: " +
+          error
+      );
+      Toast.show({
+        text1: "Failed loading measurements data",
+        text2: `For measurement ${item.uid}`,
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+      navigation.navigate("Home");
+      // expected output: ReferenceError: nonExistentFunction is not defined
+      // Note - error messages will vary depending on browser
+    }
   };
 
   const renderAnalyticsItem = ({ item }) => {
