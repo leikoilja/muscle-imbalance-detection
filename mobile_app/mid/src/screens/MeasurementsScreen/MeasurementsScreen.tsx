@@ -120,7 +120,6 @@ export default function MeasurementsScreen({ navigation, route }) {
         console.error("Error reading document: ", error);
         setIsFetching(false);
       });
-
     setMeasurementsData(fetchedMeasurementsData);
   };
 
@@ -151,11 +150,10 @@ export default function MeasurementsScreen({ navigation, route }) {
 
   const onAnalyticsPress = (analytics) => {
     const modalTitle = "Analytics Insights";
-    const fetchedAnalyticsData = [];
-    for (const analytic of analytics) {
-      const key = Object.keys(analytic)[0];
-      fetchedAnalyticsData.push({ key: key, value: analytic[key] });
-    }
+    const fetchedAnalyticsData = Object.keys(analytics).map((key) => ({
+      key: key,
+      value: analytics[key],
+    }));
     console.log("Analytics", fetchedAnalyticsData);
     setModalTitle(modalTitle);
     setAnalyticsModalData(fetchedAnalyticsData);
