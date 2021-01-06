@@ -83,3 +83,4 @@ web-build/
 # @end expo-cli
 
 .DS_Store
+firenase/config.tsx
