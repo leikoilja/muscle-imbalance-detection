@@ -1,0 +1,48 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>KiCad BOM Example 5</title>
+    </head>
+    <body>
+    <h1>C:\Users\vishn\Desktop\EMG\emg\emg.sch</h1>
+    <p>11/30/20 15:52:51</p>
+    <p>Eeschema (5.1.4)-1</p>
+    <p><b>Component Count:</b>82</p>
+    <table>
+    <tr><th style='width:640px'>Ref</th><th>Qnty</th><th>Value</th><th>Part</th><th>Footprint</th><th>Description</th><th>Vendor</th></tr>
+    <tr><td>C1</td><td>1</td><td>100uF/ Electrolytic</td><td>Device:C</td><td>Capacitor_THT:CP_Radial_D5.0mm_P2.50mm</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C2, C18, C19, C20, C21</td><td>5</td><td>0.1uF</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C3, C4, C8, C11, C16, C17</td><td>6</td><td>10uF</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C5</td><td>1</td><td>NM</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C6, C7, C9, C10</td><td>4</td><td>470nF</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C12, C13</td><td>2</td><td>C</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C14, C15</td><td>2</td><td>330nF</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>C22, C23</td><td>2</td><td>22pF</td><td>Device:C</td><td>Capacitor_SMD:C_0805_2012Metric</td><td>Unpolarized capacitor</td><td></td></tr>
+    <tr><td>D1, D2</td><td>2</td><td>1N4148</td><td>Diode:1N4148</td><td>Diode_SMD:D_SC-80</td><td>100V 0.15A standard switching diode, DO-35</td><td></td></tr>
+    <tr><td>D3, D5, D6</td><td>3</td><td>LED</td><td>Device:LED</td><td>LED_SMD:LED_0805_2012Metric</td><td>Light emitting diode</td><td></td></tr>
+    <tr><td>D4</td><td>1</td><td>1N4007</td><td>Diode:1N4007</td><td>Diode_SMD:D_SMA</td><td>1000V 1A General Purpose Rectifier Diode, DO-41</td><td></td></tr>
+    <tr><td>J1, J2, J4</td><td>3</td><td>Conn_01x03_Female</td><td>Connector:Conn_01x03_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal</td><td>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J3</td><td>1</td><td>Conn_01x06_Female</td><td>Connector:Conn_01x06_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical</td><td>Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>J5</td><td>1</td><td>Conn_01x02_Female</td><td>Connector:Conn_01x02_Female</td><td>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal</td><td>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</td><td></td></tr>
+    <tr><td>R1, R2, R3, R4, R18, R19, R21, R22, R27, R28, R38</td><td>11</td><td>1k</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R5, R6, R7, R8, R31, R32</td><td>6</td><td>47k</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R9</td><td>1</td><td>0E</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R10, R11, R14, R16</td><td>4</td><td>15k</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R12, R13, R23, R24, R35, R36</td><td>6</td><td>18k</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R15, R17, R20, R25, R26, R33, R34, R39</td><td>8</td><td>10k</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R29, R30</td><td>2</td><td>5k</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R37</td><td>1</td><td>NM</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>R40, R41</td><td>2</td><td>330E</td><td>Device:R</td><td>Resistor_SMD:R_0805_2012Metric</td><td>Resistor</td><td></td></tr>
+    <tr><td>U1</td><td>1</td><td>ICL7660</td><td>Regulator_SwitchedCapacitor:ICL7660</td><td>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</td><td>Switched-Capacitor Voltage Converter, 1.5V to 10.0V operating supply voltage, 10mA with a 0.5V output drop, SO-8/DIP-8/µMAX-8/TO-99</td><td></td></tr>
+    <tr><td>U2</td><td>1</td><td>LM1117-3.3</td><td>Regulator_Linear:LM1117-3.3</td><td>Package_TO_SOT_SMD:SOT-223-3_TabPin2</td><td>800mA Low-Dropout Linear Regulator, 3.3V fixed output, TO-220/TO-252/TO-263/SOT-223</td><td></td></tr>
+    <tr><td>U3, U4</td><td>2</td><td>LM324</td><td>Amplifier_Operational:LM324</td><td>Package_SO:SOIC-14_3.9x8.7mm_P1.27mm</td><td>Low-Power, Quad-Operational Amplifiers, DIP-14/SOIC-14/SSOP-14</td><td></td></tr>
+    <tr><td>U5</td><td>1</td><td>HC-05</td><td>hc05:HC-05</td><td>hc05:HC-05</td><td></td><td></td></tr>
+    <tr><td>U6</td><td>1</td><td>ATmega328P-AU</td><td>MCU_Microchip_ATmega:ATmega328P-AU</td><td>Package_QFP:TQFP-32_7x7mm_P0.8mm</td><td>20MHz, 32kB Flash, 2kB SRAM, 1kB EEPROM, TQFP-32</td><td></td></tr>
+    <tr><td>Y1</td><td>1</td><td>16MHz Crystal</td><td>Device:Crystal</td><td>Crystal:Crystal_HC18-U_Vertical</td><td>Two pin crystal</td><td></td></tr><!--TABLEROW-->
+    </table>
+    </body>
+</html>
+    
