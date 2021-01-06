@@ -28,7 +28,7 @@
     <br />
     <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/analytics">Analytics</a>
     &
-    <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/electornics">Electornics</a>
+    <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/electronics">Electronics</a>
     &
     <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/mcu">MCU</a>
     &
@@ -90,7 +90,7 @@ To get started follow the corresponding sections and their READMEs:
 <br />
 <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/analytics">Analytics</a>
 &
-<a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/electornics">Electornics</a>
+<a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/electronics">Electronics</a>
 &
 <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/mcu">MCU</a>
 &
