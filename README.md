@@ -101,6 +101,8 @@ To get started follow the corresponding sections and their READMEs:
 Basic electronics and software development knowledge.
 
 ## Device demonstration
+Click to view the video:
+[![Watch the video](https://img.youtube.com/vi/BWLUeXuKNtg/maxresdefault.jpg)](https://youtu.be/BWLUeXuKNtg)
 
 <!-- CONTRIBUTING -->
 ## Contributing
