@@ -2,6 +2,15 @@
 
 .........................A Python package for supporting the external loading and processing of biological signals .It can be installed through pip command.
 
+Signal filtring:low 1hz,high 300hz
+Explain tkeo filter,moving average filter,butterworth filter
+Signal smoothning(Comparing with different different smoothing levels)
+Signal rectification
+Detecting muscle activation(burst duration)
+RMS(root mean squre value)
+Muscle fatiguelevel
+Total are of signal
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install biosignalsnotebooks.
