@@ -24,7 +24,7 @@
   <h3 align="center">Muscle Imbalance Detection (MID)</h3>
 
   <p align="center">
-    This project was a part of KTH University HL2032 course to create a medical engineering project.
+    This project was a part of <a href="https://www.kth.se/">KTH</a> University <a href="https://www.kth.se/student/kurser/kurs/HL2032?l=en">HL2032</a> course to create a medical engineering project.
     <br />
     <a href="https://github.com/leikoilja/muscle-imbalance-detection/tree/master/analytics">Analytics</a>
     &
