@@ -103,6 +103,7 @@ Basic electronics and software development knowledge.
 ## Device demonstration
 Click to view the video:
 [![Watch the video](https://img.youtube.com/vi/BWLUeXuKNtg/maxresdefault.jpg)](https://youtu.be/BWLUeXuKNtg)
+Or download the video [here](images/EMG_Knee_Device_Demo_rev2.mp4)
 
 <!-- CONTRIBUTING -->
 ## Contributing
