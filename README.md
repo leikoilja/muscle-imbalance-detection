@@ -81,7 +81,7 @@ The mobile app was implemented using React Native open-source mobile application
 
 #### Cloud computing
 The project utilizes Google firebase product which powers up authentication and cloud data storage functionalities. Firebase was chosen due to its robustness and sensitive data safety.
-Backend analysis is implemented using python3.7 open source programming language which is mainly used for EMG signal analysis, filtration, and processing with the data collected from the cloud. The dataset we created from various sources used for the machine learning model to recognize muscle recovery over time and muscle fatigue level.
+Backend analysis is implemented using python3.7 open source programming language which is mainly used for EMG signal analysis, filtration, and processing with the data collected from the cloud. The dataset we created from various sources used to recognize muscle recovery over time and muscle fatigue level.
 
 <!-- GETTING STARTED -->
 ## Getting Started
