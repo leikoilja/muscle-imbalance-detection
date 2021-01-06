@@ -17,7 +17,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/leikoilja/muscle-imbalance-detection">
     <img src="images/logo.png" alt="Logo" height="200">
   </a>
 
@@ -131,15 +131,15 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/leikoilja/muscle-imbalance-detection
 [contributors-url]: https://github.com/leikoilja/muscle-imbalance-detection/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/leikoilja/muscle-imbalance-detection
 [forks-url]: https://github.com/leikoilja/muscle-imbalance-detection/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/leikoilja/muscle-imbalance-detection
 [stars-url]: https://github.com/leikoilja/muscle-imbalance-detection/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/leikoilja/muscle-imbalance-detection
 [issues-url]: https://github.com/leikoilja/muscle-imbalance-detection/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/leikoilja/muscle-imbalance-detection
 [license-url]: https://github.com/leikoilja/muscle-imbalance-detection/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
 [communication-screenshot]: images/communication.png
