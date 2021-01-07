@@ -127,6 +127,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+Initial project authors:
 * [Katlinkt](https://github.com/Katlinkt)
 * [Behname](https://github.com/Behname)
 * [sanjayshiva0109](https://github.com/sanjayshiva0109)

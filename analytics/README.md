@@ -1,7 +1,7 @@
 A Python script for supporting the external loading and processing of biological signals.
 
 Features:
-- Signal filtring: low 1hz, high 300hz
+- Signal filtering: low 1Hz, high 300Hz
 - Explains tkeo filter, moving average filter, butter-worth filter
 - Signal smoothing (comparing with different different smoothing levels)
 - Signal rectification
@@ -10,9 +10,7 @@ Features:
 - Muscle fatigue level
 
 ## Installation
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install biosignalsnotebooks and required dependencies:
-Please see [this resource](https://firebase.google.com/docs/firestore/quickstart) on how to setup firebase access to python.
-
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install biosignalsnotebooks and required dependencies.
 ```bash
 pip install biosignalsnotebooks
 pip install numpy
@@ -20,6 +18,7 @@ pip install pandas
 pip install matplotlib
 pip install firebase-admin
 ```
+Please see [this resource](https://firebase.google.com/docs/firestore/quickstart) on how to setup firebase access to python.
 
 ## Usage
 ```python
