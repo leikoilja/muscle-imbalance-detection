@@ -98,7 +98,9 @@ To get started follow the corresponding sections and their READMEs:
 
 ### Prerequisites
 
-Basic electronics and software development knowledge.
+- Basic electronics and software development knowledge.
+- Wearable electrodes for testing. See [this resource](https://github.com/leikoilja/muscle-imbalance-detection/tree/master/electronics/wearble-electrodes) for instructions how to make one.
+
 
 ## Device demonstration
 Click to view the video:
