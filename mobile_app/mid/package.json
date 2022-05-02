@@ -38,7 +38,7 @@
     "firebase": "^7.20.0",
     "moment": "^2.29.1",
     "react": "^17.0.0-rc.3",
-    "react-dom": "~16.13.0",
+    "react-dom": "~18.1.0",
     "react-native": "^0.63.3",
     "react-native-bluetooth-classic": "https://github.com/leikoilja/react-native-bluetooth-classic",
     "react-native-chart-kit": "^6.6.1",
